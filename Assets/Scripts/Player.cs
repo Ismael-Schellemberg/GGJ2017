@@ -23,8 +23,9 @@ public class Player : MonoBehaviour {
     public float timeOffset;
     float breakCooldown;
 
-    Vector2 movement = Vector2.zero;
-    Vector2 cameraMovement = Vector2.zero;
+    Vector3 movement = Vector2.zero;
+	Vector3 cameraPosition = Vector2.zero;
+	float cameraDeltaX;
 
     bool isMovingFree;
     bool isPressing;
@@ -34,12 +35,16 @@ public class Player : MonoBehaviour {
         isMovingFree = false;
         movingSign = 1;
         amp = 0.1f;
+		cameraPosition = Camera.main.transform.position;
+		cameraDeltaX = Camera.main.transform.position.x - transform.position.x;
+		Debug.Log ("" + cameraPosition);
         UpdateTrailColor();
         ySpeed = maxXSpeed;
     }
 
     void Update() {
         isPressing = Input.GetKey(KeyCode.Space) || Input.GetMouseButton(0);
+
         if (!isMovingFree && isPressing) {
             ySpeed = Mathf.Sign(lastY * transform.position.y) * transform.position.y;
 
@@ -58,9 +63,11 @@ public class Player : MonoBehaviour {
 
         float deltaX = xSpeed * Time.deltaTime;
         movement.x += deltaX;
-        cameraMovement.x = deltaX;
-        transform.position = movement;
-        camera.transform.Translate(cameraMovement);
+		transform.position = movement;
+
+
+		cameraPosition.x = movement.x + cameraDeltaX;
+		camera.transform.position = cameraPosition;
     }
 
     void UpdateTrailColor() {
