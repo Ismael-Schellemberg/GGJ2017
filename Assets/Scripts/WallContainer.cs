@@ -8,14 +8,15 @@ public class WallContainer : MonoBehaviour {
     public Wall bottomWall;
 
     public int wallId;
-	public float maxX {
-		get {
-			return topWall.transform.position.x + topWall.width;
-		}
-	}
 
-	public float width {
-		get { return topWall.width; }
+    public float maxX {
+        get {
+            return topWall.transform.position.x + topWall.width;
+        }
+    }
+
+    public float width {
+        get { return topWall.width; }
     }
 
 }
