@@ -10,7 +10,7 @@ public class LevelManager : MonoBehaviour {
 
     private float visibleHeight;
     private float visibleWidth;
-	private float cameraHorizontalSize;
+    private float cameraHorizontalSize;
 
     private float lastX;
     private WallContainer bottomWall;
@@ -20,14 +20,15 @@ public class LevelManager : MonoBehaviour {
 
 
     void Start() {
-		visibleHeight = 2.0f * (- Camera.main.transform.position.z) * Mathf.Tan(Camera.main.fieldOfView * 0.5f * Mathf.Deg2Rad);
+        visibleHeight = 2.0f * (-Camera.main.transform.position.z) * Mathf.Tan(Camera.main.fieldOfView * 0.5f * Mathf.Deg2Rad);
 //        visibleHeight = Camera.main.orthographicSize * 2f;
         visibleWidth = visibleHeight * Camera.main.aspect;
-		cameraHorizontalSize = visibleWidth / 2f;
+        cameraHorizontalSize = visibleWidth / 2f;
 
-		lastX = -cameraHorizontalSize;
+        lastX = -cameraHorizontalSize;
 
         for(int i = 0; i < wallContainerPrefabs.Length; i++) {
+            wallContainerPrefabs[i].Init();
             wallContainerPrefabs[i].wallId = i;
         }
 
@@ -41,7 +42,7 @@ public class LevelManager : MonoBehaviour {
     private void addRandomWall() {
         WallContainer container = getNextWallContainer();
 
-        float containerWidth = container.width;
+        float containerWidth = container.Width;
         float xPos = lastX + (containerWidth / 2f);
 
         container.transform.position = new Vector3(xPos, 0f, 0f);
@@ -54,8 +55,8 @@ public class LevelManager : MonoBehaviour {
     }
 
     private bool needsNewWall() {
-		float rightX = Camera.main.transform.position.x + cameraHorizontalSize + 1f; // agregar 1 para que haya margen
-		return lastX < rightX;
+        float rightX = Camera.main.transform.position.x + cameraHorizontalSize + 1f; // agregar 1 para que haya margen
+        return lastX < rightX;
     }
 
     private WallContainer getNextWallContainer() {
@@ -70,6 +71,7 @@ public class LevelManager : MonoBehaviour {
             WallContainer prefab = wallContainerPrefabs[index];
             container = (WallContainer)GameObject.Instantiate(prefab);
             container.wallId = prefab.wallId;
+            container.Init();
             container.transform.SetParent(transform);
         }
 
@@ -85,7 +87,7 @@ public class LevelManager : MonoBehaviour {
     }
 
     private void checkCacheBottomWall() {
-		float leftX = Camera.main.transform.position.x - cameraHorizontalSize;
+        float leftX = Camera.main.transform.position.x - cameraHorizontalSize;
 
         if(leftX > bottomWall.maxX) {
             moveWallToCache(bottomWall);

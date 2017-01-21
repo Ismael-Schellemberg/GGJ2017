@@ -6,7 +6,11 @@ public class Wall : MonoBehaviour {
 
     public SpriteRenderer spriteRenderer;
 
-    public float width {
-        get { return spriteRenderer.sprite.bounds.max.x - spriteRenderer.sprite.bounds.min.x; }
+    public float maxX {
+        get { return spriteRenderer.sprite.bounds.max.x; }
+    }
+
+    public float minX {
+        get { return spriteRenderer.sprite.bounds.min.x; }
     }
 }
