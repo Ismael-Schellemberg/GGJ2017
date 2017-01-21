@@ -7,46 +7,31 @@ public class Player : MonoBehaviour {
     [SerializeField] Animator anim;
     bool playing;
     public Camera camera;
-    //    float ySpeed;
-    //    float xSpeed;
 
-    private static float TWO_PI = Mathf.PI * 2f;
-    //	private static float BEFORE_PI = Mathf.PI * 0.85;
-
-
+	public static float TWO_PI = Mathf.PI * 2f;
     public static float minXSpeed = 5f;
-    //    public float maxXSpeed;
-    //    public float maxYSpeed;
 
+	[SerializeField] SpriteRenderer spriteRenderer;
     [SerializeField] TrailRenderer trailRend;
     [SerializeField] Color fixedColor;
     [SerializeField] Color freeColor;
-    [SerializeField] float amplitude = 1f;
-    [SerializeField] float periodDuration = 5f;
-    // duracion de la recorrida de un periodo entero
-    // (desde que pasa por y = 0 hacia arriba, llega al tope y vuelve a bajar a y = 0)
-    [SerializeField] float xSpeed = 2f;
-    [SerializeField] float turnRadius = 0.05f;
-    // Tiene que estar entre 0f y 0.25f (idealmente no en el borde)
-    [SerializeField] float lerpDuration = 0.2f;
+    [SerializeField] float amplitude = 1f; // La amplitud de la oscilacion
+	[SerializeField] float periodDuration = 5f; // duracion de la recorrida de un periodo entero (depende de amplitude)
+	[SerializeField] float xSpeed = 2f; // Velocidad horizontal (depende de amplitude)
+    [SerializeField] float turnRadius = 0.05f; // Tiene que estar entre 0f y 0.25f (idealmente no en el borde)
+//    [SerializeField] float lerpDuration = 0.2f;
+	[SerializeField] float rotationMax = 35f; // cuanto varia el angulo del jugador
     // Tiempo que demora en pasar de la amplitud actual a la nueva
     float targetAmplitude;
-    float lerpSpeed;
-    bool lerpIncreasesAmplitude;
-    bool lerping;
-    float lerpTimer;
+//    float lerpSpeed;
+//    bool lerpIncreasesAmplitude;
+//    bool lerping;
+//    float lerpTimer;
 
-    //    float lastY;
-    //    int movingSign;
-    //    public float amp;
-    //    [SerializeField] float accelSpeed;
-
-    //    public float timeOffset;
-    //    float breakCooldown;
-
-    Vector3 playerPosition = Vector2.zero;
-    Vector3 lastPlayerMovement = Vector2.zero;
-    Vector3 cameraPosition = Vector2.zero;
+    Vector3 playerPosition = Vector3.zero;
+	Vector3 spriteRotation = Vector3.zero;
+    Vector3 lastPlayerMovement = Vector3.zero;
+    Vector3 cameraPosition = Vector3.zero;
     float cameraDeltaX;
 
     bool isMovingFree;
@@ -62,37 +47,43 @@ public class Player : MonoBehaviour {
     // amplitude 2   - periodDuration 4
 
     private float getXSpeed(float amp) {
-        float result = -(amp * 2.5f) + 10;
-        return result;
+		return 5f;
+//        float result = -(amp * 2.5f) + 10;
+//        return result;
     }
 
     private float getPeriodDuration(float amp) {
-//		if (lerping) {
-//			
-//		} else {
         return amp * 2f;
-//		}
     }
+
+	private float getRotationMax(float amp) {
+		if (amp > 1f)
+			return 35f;
+		else {
+			return 35f * amp;
+		}
+	}
 
     void Awake() {
         Reset();
     }
 
     void Start() {
+		if (spriteRenderer == null)
+			spriteRenderer = gameObject.GetComponentInChildren<SpriteRenderer> ();
+		
         isPressing = false;
         isMovingFree = false;
-//        movingSign = 1;
-//        amp = 0.1f;
         playerPosition = transform.position;
         cameraPosition = camera.transform.position;
         cameraDeltaX = cameraPosition.x - playerPosition.x;
-//		ySpeed = maxXSpeed;
+		setAmplitude (amplitude); // Solo para actualizar las cosas que dependen de la amp
 
         UpdateTrailColor();
     }
 
     void Update() {
-        if(!playing)
+        if (!playing)
             return;
 
 //		periodTimer = periodTimer % TWO_PI;
@@ -153,13 +144,13 @@ public class Player : MonoBehaviour {
                 float periodPercentage = curvePercentage * TWO_PI;
                 float currentHeightPercentage = Mathf.Sin(periodPercentage);
 
-                lerping = true;
-                lerpTimer = 0f;
+//                lerping = true;
+//                lerpTimer = 0f;
 
                 setAmplitude(Mathf.Abs(playerPosition.y / currentHeightPercentage));
 //				targetAmplitude = Mathf.Abs(playerPosition.y / currentHeightPercentage);
 //				lerpIncreasesAmplitude = targetAmplitude > amplitude;
-                lerpSpeed = (targetAmplitude - amplitude) / lerpDuration;
+//                lerpSpeed = (targetAmplitude - amplitude) / lerpDuration;
 
                 Debug.Log("curvePercentage = " + curvePercentage + ", periodPercentage = " + periodPercentage
                 + ", currentHeightPercentage = " + currentHeightPercentage + ", targetAmplitude = " + targetAmplitude);
@@ -200,18 +191,26 @@ public class Player : MonoBehaviour {
                 playerPosition.x += xSpeed * Time.deltaTime;
 				
                 float frequencyMultiplier = TWO_PI / periodDuration;
-                float targetY = Mathf.Sin(periodTimer * frequencyMultiplier) * amplitude;
-//				if (lerping) {
-//					lerpTimer += Time.deltaTime;
-//				} else {
-                playerPosition.y = targetY;
-//				}
+				float periodTime = periodTimer * frequencyMultiplier;
+
+				float periodSin = Mathf.Sin (periodTime);
+				float periodCos = Mathf.Cos (periodTime);
+
+				playerPosition.y = periodSin * amplitude;
+
+				spriteRotation.z = -35 + (periodCos * rotationMax);
+
+				// periodTime = 0      ... cos = 1  ... rotation = -35 + rotationMax
+				// periodTime = PI/2   ... cos = 0  ... rotation = -35
+				// periodTime = PI     ... cos = -1 ... rotation = -35 - rotationMax
+				// periodTime = PI*3/2 ... cos = 0  ... rotation = -35
             }
         }
 
         lastPlayerMovement = playerPosition - transform.position;
 
         transform.position = playerPosition;
+		spriteRenderer.transform.eulerAngles = spriteRotation;
 
         cameraPosition.x = playerPosition.x + cameraDeltaX;
         camera.transform.position = cameraPosition;
@@ -226,13 +225,15 @@ public class Player : MonoBehaviour {
 
 
     void setAmplitude(float newAmp) {
-        amplitude = newAmp;
+//		if (newAmp <= 
+		amplitude = newAmp;
 
         // float frequencyMultiplier = TWO_PI / periodDuration;
         // playerPosition.y = Mathf.Sin(periodTimer * frequencyMultiplier) * amplitude;
 
         xSpeed = getXSpeed(amplitude);
         periodDuration = getPeriodDuration(amplitude);
+		rotationMax = getRotationMax (amplitude);
         Debug.Log("Setting new amplitude " + amplitude + ", xSpeed = " + xSpeed + ", periodDuration = " + periodDuration);
     }
 
