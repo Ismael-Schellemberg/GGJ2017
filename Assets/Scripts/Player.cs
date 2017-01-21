@@ -1,37 +1,44 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour {
-
+    public Text score;
     int points;
-
+    public LevelManager manager;
     [SerializeField] Animator anim;
     bool playing;
+    public CameraEffects cameraEffects;
     public Camera camera;
 
-	public static float TWO_PI = Mathf.PI * 2f;
+    public static float TWO_PI = Mathf.PI * 2f;
     public static float minXSpeed = 5f;
 
-	[SerializeField] SpriteRenderer spriteRenderer;
+    [SerializeField] SpriteRenderer spriteRenderer;
     [SerializeField] TrailRenderer trailRend;
     [SerializeField] Color fixedColor;
     [SerializeField] Color freeColor;
-    [SerializeField] float amplitude = 1f; // La amplitud de la oscilacion
-	[SerializeField] float periodDuration = 5f; // duracion de la recorrida de un periodo entero (depende de amplitude)
-	[SerializeField] float xSpeed = 2f; // Velocidad horizontal (depende de amplitude)
-    [SerializeField] float turnRadius = 0.05f; // Tiene que estar entre 0f y 0.25f (idealmente no en el borde)
-//    [SerializeField] float lerpDuration = 0.2f;
-	[SerializeField] float rotationMax = 35f; // cuanto varia el angulo del jugador
+    [SerializeField] float amplitude = 1f;
+    // La amplitud de la oscilacion
+    [SerializeField] float periodDuration = 5f;
+    // duracion de la recorrida de un periodo entero (depende de amplitude)
+    [SerializeField] float xSpeed = 2f;
+    // Velocidad horizontal (depende de amplitude)
+    [SerializeField] float turnRadius = 0.05f;
+    // Tiene que estar entre 0f y 0.25f (idealmente no en el borde)
+    //    [SerializeField] float lerpDuration = 0.2f;
+    [SerializeField] float rotationMax = 35f;
+    // cuanto varia el angulo del jugador
     // Tiempo que demora en pasar de la amplitud actual a la nueva
     float targetAmplitude;
-//    float lerpSpeed;
-//    bool lerpIncreasesAmplitude;
-//    bool lerping;
-//    float lerpTimer;
+    //    float lerpSpeed;
+    //    bool lerpIncreasesAmplitude;
+    //    bool lerping;
+    //    float lerpTimer;
 
     Vector3 playerPosition = Vector3.zero;
-	Vector3 spriteRotation = Vector3.zero;
+    Vector3 spriteRotation = Vector3.zero;
     Vector3 lastPlayerMovement = Vector3.zero;
     Vector3 cameraPosition = Vector3.zero;
     float cameraDeltaX;
@@ -49,7 +56,7 @@ public class Player : MonoBehaviour {
     // amplitude 2   - periodDuration 4
 
     private float getXSpeed(float amp) {
-		return 5f;
+        return 5f;
 //        float result = -(amp * 2.5f) + 10;
 //        return result;
     }
@@ -58,34 +65,31 @@ public class Player : MonoBehaviour {
         return amp * 2f;
     }
 
-	private float getRotationMax(float amp) {
-		if (amp > 1f)
-			return 35f;
-		else {
-			return 35f * amp;
-		}
-	}
-
-    void Awake() {
-        Reset();
+    private float getRotationMax(float amp) {
+        if(amp > 1f)
+            return 35f;
+        else {
+            return 35f * amp;
+        }
     }
 
     void Start() {
-		if (spriteRenderer == null)
-			spriteRenderer = gameObject.GetComponentInChildren<SpriteRenderer> ();
+        if(spriteRenderer == null)
+            spriteRenderer = gameObject.GetComponentInChildren<SpriteRenderer>();
 		
         isPressing = false;
         isMovingFree = false;
         playerPosition = transform.position;
         cameraPosition = camera.transform.position;
         cameraDeltaX = cameraPosition.x - playerPosition.x;
-		setAmplitude (amplitude); // Solo para actualizar las cosas que dependen de la amp
+        setAmplitude(amplitude); // Solo para actualizar las cosas que dependen de la amp
 
         UpdateTrailColor();
+        Reset();
     }
 
     void Update() {
-        if (!playing)
+        if(!playing)
             return;
 
 //		periodTimer = periodTimer % TWO_PI;
@@ -193,26 +197,26 @@ public class Player : MonoBehaviour {
                 playerPosition.x += xSpeed * Time.deltaTime;
 				
                 float frequencyMultiplier = TWO_PI / periodDuration;
-				float periodTime = periodTimer * frequencyMultiplier;
+                float periodTime = periodTimer * frequencyMultiplier;
 
-				float periodSin = Mathf.Sin (periodTime);
-				float periodCos = Mathf.Cos (periodTime);
+                float periodSin = Mathf.Sin(periodTime);
+                float periodCos = Mathf.Cos(periodTime);
 
-				playerPosition.y = periodSin * amplitude;
+                playerPosition.y = periodSin * amplitude;
 
-				spriteRotation.z = -35 + (periodCos * rotationMax);
+                spriteRotation.z = -35 + (periodCos * rotationMax);
 
-				// periodTime = 0      ... cos = 1  ... rotation = -35 + rotationMax
-				// periodTime = PI/2   ... cos = 0  ... rotation = -35
-				// periodTime = PI     ... cos = -1 ... rotation = -35 - rotationMax
-				// periodTime = PI*3/2 ... cos = 0  ... rotation = -35
+                // periodTime = 0      ... cos = 1  ... rotation = -35 + rotationMax
+                // periodTime = PI/2   ... cos = 0  ... rotation = -35
+                // periodTime = PI     ... cos = -1 ... rotation = -35 - rotationMax
+                // periodTime = PI*3/2 ... cos = 0  ... rotation = -35
             }
         }
 
         lastPlayerMovement = playerPosition - transform.position;
 
         transform.position = playerPosition;
-		spriteRenderer.transform.eulerAngles = spriteRotation;
+        spriteRenderer.transform.eulerAngles = spriteRotation;
 
         cameraPosition.x = playerPosition.x + cameraDeltaX;
         camera.transform.position = cameraPosition;
@@ -228,14 +232,14 @@ public class Player : MonoBehaviour {
 
     void setAmplitude(float newAmp) {
 //		if (newAmp <= 
-		amplitude = newAmp;
+        amplitude = newAmp;
 
         // float frequencyMultiplier = TWO_PI / periodDuration;
         // playerPosition.y = Mathf.Sin(periodTimer * frequencyMultiplier) * amplitude;
 
         xSpeed = getXSpeed(amplitude);
         periodDuration = getPeriodDuration(amplitude);
-		rotationMax = getRotationMax (amplitude);
+        rotationMax = getRotationMax(amplitude);
         Debug.Log("Setting new amplitude " + amplitude + ", xSpeed = " + xSpeed + ", periodDuration = " + periodDuration);
     }
 
@@ -244,13 +248,17 @@ public class Player : MonoBehaviour {
             return;
 
         if(coll.gameObject.tag == "Wall" || coll.gameObject.tag == "Obstacle") {
+            cameraEffects.ShakeCamera(5f, 0.01f);
             playing = false;
+            trailRend.enabled = false;
             anim.SetTrigger("die");  
         }
     }
 
     public void OnBornAnimationEnded() {
         playing = true;
+        trailRend.enabled = true;
+        trailRend.Clear();
     }
 
     public void OnDieAnimationEnded() {
@@ -259,11 +267,17 @@ public class Player : MonoBehaviour {
     }
 
     void Reset() {
+        UpdateScore();
         points = 0;
-        transform.position = new Vector3(-4f, 0f, 0f);
+        playerPosition = new Vector3(-4f, 0f, 0f);
+        transform.position = playerPosition;
+        cameraPosition.x = 0;
+        camera.transform.position = cameraPosition;
         isPressing = false;
         isMovingFree = false;
         UpdateTrailColor();
+
+        manager.Reset();
     }
 
     void OnTriggerEnter2D(Collider2D col) {
@@ -272,8 +286,12 @@ public class Player : MonoBehaviour {
 
         if(col.tag == "Coin") {
             points++;
+            UpdateScore();
             col.GetComponent<Coin>().Hit();
         }
     }
 
+    void UpdateScore() {
+        score.text = points.ToString();
+    }
 }

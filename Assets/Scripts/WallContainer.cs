@@ -11,7 +11,6 @@ public class WallContainer : MonoBehaviour {
 
     public void Init() {
         float minX = int.MaxValue;
-        float maxX = 0;
         for (int i = 0; i < walls.Length; i++) {
             if (minX > walls[i].minX)
                 minX = walls[i].minX;
@@ -21,5 +20,4 @@ public class WallContainer : MonoBehaviour {
         }
 		width = maxX - minX;
     }
-
 }
