@@ -40,7 +40,7 @@ public class Player : MonoBehaviour {
 
     void Update() {
         isPressing = Input.GetKey(KeyCode.Space) || Input.GetMouseButton(0);
-        if(!isMovingFree && isPressing) {
+        if (!isMovingFree && isPressing) {
             ySpeed = Mathf.Sign(lastY * transform.position.y) * transform.position.y;
 
             amp += Mathf.Sign(lastY - transform.position.y) * 1;
