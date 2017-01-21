@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Player : MonoBehaviour {
 
+    int points;
+
     [SerializeField] Animator anim;
     bool playing;
     public Camera camera;
@@ -257,9 +259,21 @@ public class Player : MonoBehaviour {
     }
 
     void Reset() {
+        points = 0;
         transform.position = new Vector3(-4f, 0f, 0f);
         isPressing = false;
         isMovingFree = false;
         UpdateTrailColor();
     }
+
+    void OnTriggerEnter2D(Collider2D col) {
+        if(!playing)
+            return;
+
+        if(col.tag == "Coin") {
+            points++;
+            col.GetComponent<Coin>().Hit();
+        }
+    }
+
 }
