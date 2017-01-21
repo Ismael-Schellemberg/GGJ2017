@@ -16,7 +16,6 @@ public class LevelManager : MonoBehaviour {
     private WallContainer bottomWall;
 
     private List<WallContainer> visibleWalls = new List<WallContainer>();
-    private Dictionary<int, List<WallContainer>> cachedWalls = new Dictionary<int, List<WallContainer>>();
 
 
     void Start() {
@@ -63,20 +62,28 @@ public class LevelManager : MonoBehaviour {
         WallContainer container = null;
 
         int index = Random.Range(0, wallContainerPrefabs.Length);
-        List<WallContainer> cache = getCachedWalls(index);
-        if(cache != null && cache.Count > 0) {
-            container = cache[0];
-            cache.Remove(container);
-        } else {
-            WallContainer prefab = wallContainerPrefabs[index];
-            container = (WallContainer)GameObject.Instantiate(prefab);
-            container.wallId = prefab.wallId;
-            container.Init();
-            container.transform.SetParent(transform);
-        }
+
+        WallContainer prefab = wallContainerPrefabs[index];
+        container = (WallContainer)GameObject.Instantiate(prefab);
+        container.wallId = prefab.wallId;
+        container.Init();
+        container.transform.SetParent(transform);
 
         container.gameObject.SetActive(true);
         return container;
+    }
+
+    public void Reset() {
+        WallContainer[] toDelete = visibleWalls.ToArray();
+        visibleWalls.Clear();
+        for(int i = 0; i < toDelete.Length; i++) {
+            Destroy(toDelete[i].gameObject);
+        }
+        bottomWall = null;
+        lastX = -cameraHorizontalSize;
+        while(needsNewWall()) {
+            addRandomWall();
+        }
     }
 
     void Update() {
@@ -89,24 +96,12 @@ public class LevelManager : MonoBehaviour {
     private void checkCacheBottomWall() {
         float leftX = Camera.main.transform.position.x - cameraHorizontalSize;
 
-        if(leftX > bottomWall.maxX) {
-            moveWallToCache(bottomWall);
-            bottomWall = visibleWalls[0];
+        if(bottomWall != null && leftX > bottomWall.maxX) {
+            bottomWall.gameObject.SetActive(false);
+            visibleWalls.Remove(bottomWall);
+            Destroy(bottomWall.gameObject);
+            if(visibleWalls.Count > 0)
+                bottomWall = visibleWalls[0];
         }
-    }
-
-    private void moveWallToCache(WallContainer wall) {
-        wall.gameObject.SetActive(false);
-        visibleWalls.Remove(wall);
-        List<WallContainer> equivalentWalls = getCachedWalls(wall.wallId);
-        if(equivalentWalls == null) {
-            equivalentWalls = new List<WallContainer>();
-            cachedWalls[wall.wallId] = equivalentWalls;
-        }
-        equivalentWalls.Add(wall);
-    }
-
-    private List<WallContainer> getCachedWalls(int wallId) {
-        return cachedWalls.ContainsKey(wallId) ? cachedWalls[wallId] : null;
     }
 }

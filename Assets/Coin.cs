@@ -7,11 +7,15 @@ public class Coin : MonoBehaviour {
     [SerializeField] Animator anim;
 
     void Start() {
+        colider.enabled = true;
         anim.speed = Random.Range(0.8f, 1.2f);
     }
 
     public void Hit() {
+        if(!colider.enabled)
+            return;
+
         colider.enabled = false;
-        anim.SetTrigger("hit");
+        anim.SetBool("hit", true);
     }
 }

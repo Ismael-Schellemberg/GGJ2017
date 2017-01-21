@@ -32,5 +32,4 @@ public class WallContainer : MonoBehaviour {
     public float Width {
         get { return width; }
     }
-
 }
