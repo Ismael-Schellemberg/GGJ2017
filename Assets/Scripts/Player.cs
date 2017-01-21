@@ -94,6 +94,7 @@ public class Player : MonoBehaviour {
     void Update() {
         if(!playing)
             return;
+
 //		periodTimer = periodTimer % TWO_PI;
 
         isPressing = Input.GetKey(KeyCode.Space) || Input.GetMouseButton(0);
