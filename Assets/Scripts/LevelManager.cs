@@ -4,9 +4,11 @@ using UnityEngine;
 
 public class LevelManager : MonoBehaviour {
 
-    [SerializeField] WallContainer[] wallContainerPrefabs;
+    [SerializeField] WallContainer[] wallsFrequent;
+	[SerializeField] WallContainer[] wallsRare;
     [SerializeField] Player player;
     [SerializeField] float xSpeed;
+	[SerializeField] int minWallsBetweenRares = 5;
 
     private float visibleHeight;
     private float visibleWidth;
@@ -14,6 +16,9 @@ public class LevelManager : MonoBehaviour {
 
     private float lastX;
     private WallContainer bottomWall;
+
+	private int wallsSinceLastRare = 0;
+
 
     private List<WallContainer> visibleWalls = new List<WallContainer>();
     private Dictionary<int, List<WallContainer>> cachedWalls = new Dictionary<int, List<WallContainer>>();
@@ -27,10 +32,15 @@ public class LevelManager : MonoBehaviour {
 
         lastX = -cameraHorizontalSize;
 
-        for(int i = 0; i < wallContainerPrefabs.Length; i++) {
-            wallContainerPrefabs[i].Init();
-            wallContainerPrefabs[i].wallId = i;
+		for(int i = 0; i < wallsFrequent.Length; i++) {
+			wallsFrequent[i].Init();
+			wallsFrequent[i].wallId = i;
         }
+
+		for(int i = 0; i < wallsRare.Length; i++) {
+			wallsRare[i].Init();
+			wallsRare[i].wallId = wallsFrequent.Length + i;
+		}
 
         while(needsNewWall()) {
             addRandomWall();
@@ -42,7 +52,7 @@ public class LevelManager : MonoBehaviour {
     private void addRandomWall() {
         WallContainer container = getNextWallContainer();
 
-        float containerWidth = container.Width;
+        float containerWidth = container.width;
         float xPos = lastX + (containerWidth / 2f);
 
         container.transform.position = new Vector3(xPos, 0f, 0f);
@@ -62,13 +72,21 @@ public class LevelManager : MonoBehaviour {
     private WallContainer getNextWallContainer() {
         WallContainer container = null;
 
-        int index = Random.Range(0, wallContainerPrefabs.Length);
-        List<WallContainer> cache = getCachedWalls(index);
-        if(cache != null && cache.Count > 0) {
+		bool useRareWall = wallsSinceLastRare > minWallsBetweenRares ? Random.value < 0.2f : false;
+
+
+		int maxIndex = useRareWall ? wallsRare.Length : wallsFrequent.Length;
+		int index = Random.Range(0, maxIndex);
+		int wallId = index;
+		if (useRareWall)
+			wallId += wallsFrequent.Length;
+				
+		List<WallContainer> cache = getCachedWalls(wallId);
+        if (cache != null && cache.Count > 0) {
             container = cache[0];
             cache.Remove(container);
         } else {
-            WallContainer prefab = wallContainerPrefabs[index];
+			WallContainer prefab = useRareWall ? wallsRare[index] : wallsFrequent[index];
             container = (WallContainer)GameObject.Instantiate(prefab);
             container.wallId = prefab.wallId;
             container.Init();
@@ -87,12 +105,12 @@ public class LevelManager : MonoBehaviour {
     }
 
     private void checkCacheBottomWall() {
-        float leftX = Camera.main.transform.position.x - cameraHorizontalSize;
-
-        if(leftX > bottomWall.maxX) {
-            moveWallToCache(bottomWall);
-            bottomWall = visibleWalls[0];
-        }
+//        float leftX = Camera.main.transform.position.x - cameraHorizontalSize;
+//
+//        if(leftX > bottomWall.maxX) {
+//            moveWallToCache(bottomWall);
+//            bottomWall = visibleWalls[0];
+//        }
     }
 
     private void moveWallToCache(WallContainer wall) {
