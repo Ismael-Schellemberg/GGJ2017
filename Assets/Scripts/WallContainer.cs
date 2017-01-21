@@ -4,14 +4,14 @@ using UnityEngine;
 
 public class WallContainer : MonoBehaviour {
 
-	public Wall leftWall;
-	public Wall rightWall;
+    public Wall leftWall;
+    public Wall rightWall;
 
-	public int wallId;
-	public float topY;
+    public int wallId;
+    public float minX;
 
-	public float height {
-		get { return leftWall.height; }
-	}
+    public float widht {
+        get { return leftWall.width; }
+    }
 
 }

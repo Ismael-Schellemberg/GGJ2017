@@ -5,9 +5,10 @@ using UnityEngine;
 public class Player : MonoBehaviour {
 
     public Camera camera;
-    float xSpeed;
     float ySpeed;
+    float xSpeed;
 
+    public float minXSpeed;
     public float maxXSpeed;
     public float maxYSpeed;
 
@@ -15,72 +16,50 @@ public class Player : MonoBehaviour {
     [SerializeField] Color fixedColor;
     [SerializeField] Color freeColor;
     int movingSign;
-    bool isMovingFree;
-    float fixedDeltaX;
+    public float amp;
+    float lastY;
     [SerializeField] float accelSpeed;
 
-    bool isBreaking;
-
+    public float timeOffset;
     float breakCooldown;
 
     Vector2 movement = Vector2.zero;
     Vector2 cameraMovement = Vector2.zero;
 
+    bool isMovingFree;
+    bool isPressing;
+
     void Start() {
-        movingSign = 1;
+        isPressing = false;
         isMovingFree = false;
-        isBreaking = false;
-        fixedDeltaX = 0.1f;
+        movingSign = 1;
+        amp = 0.1f;
         UpdateTrailColor();
-        xSpeed = maxXSpeed;
+        ySpeed = maxXSpeed;
     }
 
     void Update() {
+        isPressing = Input.GetKey(KeyCode.Space) || Input.GetMouseButton(0);
+        if(!isMovingFree && isPressing) {
+            ySpeed = Mathf.Sign(lastY * transform.position.y) * transform.position.y;
+
+            amp += Mathf.Sign(lastY - transform.position.y) * 1;
+        }
+
+        isMovingFree = isPressing;
+        lastY = transform.position.y;
         if(isMovingFree) {
-            if(xSpeed < maxXSpeed) {
-                xSpeed += accelSpeed * Time.deltaTime;
-            }
-        } else {
-            if(isBreaking) {
-                xSpeed -= accelSpeed * Time.deltaTime;
-                if(xSpeed <= 0.01f) {
-                    isBreaking = false;
-                    movingSign = -movingSign;
-                }
-            } else if(xSpeed < maxXSpeed) {
-                xSpeed += accelSpeed * Time.deltaTime;
-            }
-
-            if((transform.position.x < -fixedDeltaX && movingSign < 0) ||
-               (transform.position.x > fixedDeltaX && movingSign > 0)) {
-
-                isBreaking = true;
-            }
+            amp += ySpeed * Time.deltaTime;
         }
+        movement.y = Mathf.Sin(Time.time * (1f / amp)) * amp;
+        UpdateTrailColor();
 
-        if(Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0)) {
-            if(isMovingFree) {
-                fixedDeltaX = Mathf.Abs(transform.position.x);
-                if((transform.position.x < 0 && movingSign < 0) ||
-                   (transform.position.x > 0 && movingSign > 0)) {
+        xSpeed = Mathf.Clamp(maxYSpeed * (1 - (Mathf.Abs(transform.position.y) / 4f)), 0.1f, maxYSpeed);
 
-                    isBreaking = true;
-                }
-            }
-            isMovingFree = !isMovingFree;
-
-            UpdateTrailColor();
-        }
-
-        ySpeed = Mathf.Clamp(maxYSpeed * (1 - (Mathf.Abs(transform.position.x) / 4f)), 0.1f, maxYSpeed);
-
-        float deltaX = movingSign * xSpeed * Time.deltaTime;
-        float deltaY = ySpeed * Time.deltaTime;
-        movement.x = deltaX;
-        movement.y = deltaY;
-        cameraMovement.y = deltaY;
-
-        transform.Translate(movement);
+        float deltaX = xSpeed * Time.deltaTime;
+        movement.x += deltaX;
+        cameraMovement.x = deltaX;
+        transform.position = movement;
         camera.transform.Translate(cameraMovement);
     }
 

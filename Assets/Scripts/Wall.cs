@@ -4,15 +4,15 @@ using UnityEngine;
 
 public class Wall : MonoBehaviour {
 
-	public SpriteRenderer spriteRenderer;
+    public SpriteRenderer spriteRenderer;
 
-	public float height {
-		get { return spriteRenderer.sprite.bounds.max.y - spriteRenderer.sprite.bounds.min.y; }
-	}
+    public float width {
+        get { return spriteRenderer.sprite.bounds.max.x - spriteRenderer.sprite.bounds.min.x; }
+    }
 
-	void OnCollisionEnter2D(Collision2D coll) {
-		if (coll.gameObject.name == "Player") {
-			Debug.Log ("EXPLODE!!!");
-		}
-	}
+    void OnCollisionEnter2D(Collision2D coll) {
+        if(coll.gameObject.name == "Player") {
+            Debug.Log("EXPLODE!!!");
+        }
+    }
 }

@@ -4,103 +4,103 @@ using UnityEngine;
 
 public class LevelManager : MonoBehaviour {
 
-	[SerializeField] WallContainer[] wallContainerPrefabs;
-	[SerializeField] Player player;
-	[SerializeField] float ySpeed;
+    [SerializeField] WallContainer[] wallContainerPrefabs;
+    [SerializeField] Player player;
+    [SerializeField] float xSpeed;
 
-	private float visibleHeight;
-	private float visibleWidth;
+    private float visibleHeight;
+    private float visibleWidth;
 
-	private float lastY;
-	private WallContainer bottomWall;
+    private float lastX;
+    private WallContainer bottomWall;
 
-	private List<WallContainer> visibleWalls = new List<WallContainer>();
-	private Dictionary<int, List<WallContainer>> cachedWalls = new Dictionary<int, List<WallContainer>>();
+    private List<WallContainer> visibleWalls = new List<WallContainer>();
+    private Dictionary<int, List<WallContainer>> cachedWalls = new Dictionary<int, List<WallContainer>>();
 
 
-	void Start() {
-		visibleHeight = Camera.main.orthographicSize * 2f;
-		visibleWidth = visibleHeight * Camera.main.aspect;
+    void Start() {
+        visibleHeight = Camera.main.orthographicSize * 2f;
+        visibleWidth = visibleHeight * Camera.main.aspect;
 
-		for (int i = 0; i < wallContainerPrefabs.Length; i++) {
-			wallContainerPrefabs [i].wallId = i;
-		}
+        for(int i = 0; i < wallContainerPrefabs.Length; i++) {
+            wallContainerPrefabs[i].wallId = i;
+        }
 
-		lastY = Camera.main.transform.position.y - Camera.main.orthographicSize;
-		while (needsNewWall ()) {
-			addRandomWall ();
-		}
+        lastX = Camera.main.transform.position.x - Camera.main.orthographicSize;
+        while(needsNewWall()) {
+            addRandomWall();
+        }
 
-		bottomWall = visibleWalls [0];
-	}
+        bottomWall = visibleWalls[0];
+    }
 
-	private void addRandomWall() {
-		WallContainer container = getNextWallContainer ();
+    private void addRandomWall() {
+        WallContainer container = getNextWallContainer();
 
-		float containerHeight = container.height;
-		float yPos = lastY + (containerHeight / 2f);
+        float containerWidth = container.widht;
+        float xPos = lastX + (containerWidth / 2f);
 
-		container.transform.position = new Vector3 (0f, yPos, 0f);
+        container.transform.position = new Vector3(xPos, 0f, 0f);
 
-		lastY = lastY + containerHeight;
+        lastX = lastX + containerWidth;
 
-		container.topY = lastY;
+        container.minX = lastX;
 
-		visibleWalls.Add(container);
-	}
+        visibleWalls.Add(container);
+    }
 
-	private bool needsNewWall() {
-		float topY = Camera.main.transform.position.y + Camera.main.orthographicSize + 1f; // agregar 1 para que haya margen
-		return lastY < topY;
-	}
+    private bool needsNewWall() {
+        float topX = Camera.main.transform.position.x + Camera.main.orthographicSize + 1f; // agregar 1 para que haya margen
+        return lastX < topX;
+    }
 
-	private WallContainer getNextWallContainer() {
-		WallContainer container = null;
+    private WallContainer getNextWallContainer() {
+        WallContainer container = null;
 
-		int index = Random.Range (0, wallContainerPrefabs.Length);
-		List<WallContainer> cache = getCachedWalls (index);
-		if (cache != null && cache.Count > 0) {
-			container = cache [0];
-			cache.Remove (container);
-		} else {
-			WallContainer prefab = wallContainerPrefabs [index];
-			container = (WallContainer)GameObject.Instantiate (prefab);
-			container.wallId = prefab.wallId;
-			container.transform.SetParent (transform);
-		}
+        int index = Random.Range(0, wallContainerPrefabs.Length);
+        List<WallContainer> cache = getCachedWalls(index);
+        if(cache != null && cache.Count > 0) {
+            container = cache[0];
+            cache.Remove(container);
+        } else {
+            WallContainer prefab = wallContainerPrefabs[index];
+            container = (WallContainer)GameObject.Instantiate(prefab);
+            container.wallId = prefab.wallId;
+            container.transform.SetParent(transform);
+        }
 
-		container.gameObject.SetActive (true);
-		return container;
-	}
+        container.gameObject.SetActive(true);
+        return container;
+    }
 
-	void Update() {
-		if (needsNewWall ()) {
-			addRandomWall ();
-		}
-		checkCacheBottomWall ();
-	}
+    void Update() {
+        if(needsNewWall()) {
+            addRandomWall();
+        }
+        checkCacheBottomWall();
+    }
 
-	private void checkCacheBottomWall() {
-		float bottomY = Camera.main.transform.position.y - Camera.main.orthographicSize;
+    private void checkCacheBottomWall() {
+        float leftX = Camera.main.transform.position.x - Camera.main.orthographicSize;
 
-		if (bottomY > bottomWall.topY) {
-			moveWallToCache (bottomWall);
-			bottomWall = visibleWalls [0];
-		}
-	}
+        if(leftX > bottomWall.minX) {
+            moveWallToCache(bottomWall);
+            bottomWall = visibleWalls[0];
+        }
+    }
 
-	private void moveWallToCache(WallContainer wall) {
-		wall.gameObject.SetActive (false);
-		visibleWalls.Remove (wall);
-		List<WallContainer> equivalentWalls = getCachedWalls(wall.wallId);
-		if (equivalentWalls == null) {
-			equivalentWalls = new List<WallContainer> ();
-			cachedWalls [wall.wallId] = equivalentWalls;
-		}
-		equivalentWalls.Add (wall);
-	}
+    private void moveWallToCache(WallContainer wall) {
+        wall.gameObject.SetActive(false);
+        visibleWalls.Remove(wall);
+        List<WallContainer> equivalentWalls = getCachedWalls(wall.wallId);
+        if(equivalentWalls == null) {
+            equivalentWalls = new List<WallContainer>();
+            cachedWalls[wall.wallId] = equivalentWalls;
+        }
+        equivalentWalls.Add(wall);
+    }
 
-	private List<WallContainer> getCachedWalls(int wallId) {
-		return cachedWalls.ContainsKey(wallId) ? cachedWalls [wallId] : null;
-	}
+    private List<WallContainer> getCachedWalls(int wallId) {
+        return cachedWalls.ContainsKey(wallId) ? cachedWalls[wallId] : null;
+    }
 }
