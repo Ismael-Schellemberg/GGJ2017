@@ -43,6 +43,7 @@ public class LevelManager : MonoBehaviour {
 		container.transform.position = new Vector3 (0f, yPos, 0f);
 
 		lastY = lastY + containerHeight;
+
 		container.topY = lastY;
 
 		visibleWalls.Add(container);
@@ -56,7 +57,7 @@ public class LevelManager : MonoBehaviour {
 	private WallContainer getNextWallContainer() {
 		WallContainer container = null;
 
-		int index = Random.Range (0, wallContainerPrefabs.Length - 1);
+		int index = Random.Range (0, wallContainerPrefabs.Length);
 		List<WallContainer> cache = getCachedWalls (index);
 		if (cache != null && cache.Count > 0) {
 			container = cache [0];
