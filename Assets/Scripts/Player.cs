@@ -4,39 +4,90 @@ using UnityEngine;
 
 public class Player : MonoBehaviour {
 
-	public Camera camera;
-	public float xSpeed;
-	public float ySpeed;
+    public Camera camera;
+    float xSpeed;
+    float ySpeed;
 
+    public float maxXSpeed;
+    public float maxYSpeed;
+
+    [SerializeField] TrailRenderer trailRend;
+    [SerializeField] Color fixedColor;
+    [SerializeField] Color freeColor;
+    int movingSign;
+    bool isMovingFree;
+    float fixedDeltaX;
+    [SerializeField] float accelSpeed;
+
+    bool isBreaking;
+
+    float breakCooldown;
+
+    Vector2 movement = Vector2.zero;
+    Vector2 cameraMovement = Vector2.zero;
 
     void Start() {
+        movingSign = 1;
+        isMovingFree = false;
+        isBreaking = false;
+        fixedDeltaX = 0.1f;
+        UpdateTrailColor();
+        xSpeed = maxXSpeed;
     }
 
     void Update() {
-		float deltaX = xSpeed * Time.deltaTime;
-		float deltaY = ySpeed * Time.deltaTime;
-		Vector3 movement = new Vector3 (deltaX, deltaY, 0f);
-		Vector3 cameraMovement = new Vector3 (0f, deltaY, 0f);
+        if(isMovingFree) {
+            if(xSpeed < maxXSpeed) {
+                xSpeed += accelSpeed * Time.deltaTime;
+            }
+        } else {
+            if(isBreaking) {
+                xSpeed -= accelSpeed * Time.deltaTime;
+                if(xSpeed <= 0.01f) {
+                    isBreaking = false;
+                    movingSign = -movingSign;
+                }
+            } else if(xSpeed < maxXSpeed) {
+                xSpeed += accelSpeed * Time.deltaTime;
+            }
 
+            if((transform.position.x < -fixedDeltaX && movingSign < 0) ||
+               (transform.position.x > fixedDeltaX && movingSign > 0)) {
 
+                isBreaking = true;
+            }
+        }
 
-		transform.Translate (movement);
-		camera.transform.Translate (cameraMovement);
+        if(Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0)) {
+            if(isMovingFree) {
+                fixedDeltaX = Mathf.Abs(transform.position.x);
+                if((transform.position.x < 0 && movingSign < 0) ||
+                   (transform.position.x > 0 && movingSign > 0)) {
 
-		Debug.Log ("movement = " + movement + ", newPos = " + transform.position);
+                    isBreaking = true;
+                }
+            }
+            isMovingFree = !isMovingFree;
 
-		if (xSpeed < 0 && transform.position.x < -2f)
-			xSpeed = -xSpeed;
-		else if (xSpeed > 0 && transform.position.x > 2f)
-			xSpeed = -xSpeed;	
-			
-		if (Input.GetKeyDown(KeyCode.Space))
-            xSpeed = -xSpeed;
+            UpdateTrailColor();
+        }
 
+        ySpeed = Mathf.Clamp(maxYSpeed * (1 - (Mathf.Abs(transform.position.x) / 4f)), 0.1f, maxYSpeed);
 
-		if (Input.GetKeyDown (KeyCode.UpArrow))
-			ySpeed++;
-		else if (Input.GetKeyDown (KeyCode.DownArrow))
-			ySpeed--;
+        float deltaX = movingSign * xSpeed * Time.deltaTime;
+        float deltaY = ySpeed * Time.deltaTime;
+        movement.x = deltaX;
+        movement.y = deltaY;
+        cameraMovement.y = deltaY;
+
+        transform.Translate(movement);
+        camera.transform.Translate(cameraMovement);
+    }
+
+    void UpdateTrailColor() {
+        if(isMovingFree)
+            trailRend.materials[0].SetColor("_TintColor", freeColor);
+        else
+            trailRend.materials[0].SetColor("_TintColor", fixedColor);
     }
 }
