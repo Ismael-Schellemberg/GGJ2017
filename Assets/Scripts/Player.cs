@@ -25,8 +25,14 @@ public class Player : MonoBehaviour {
 
 		Debug.Log ("movement = " + movement + ", newPos = " + transform.position);
 
-        if (Input.GetKeyDown(KeyCode.Space))
+		if (xSpeed < 0 && transform.position.x < -2f)
+			xSpeed = -xSpeed;
+		else if (xSpeed > 0 && transform.position.x > 2f)
+			xSpeed = -xSpeed;	
+			
+		if (Input.GetKeyDown(KeyCode.Space))
             xSpeed = -xSpeed;
+
 
 		if (Input.GetKeyDown (KeyCode.UpArrow))
 			ySpeed++;
