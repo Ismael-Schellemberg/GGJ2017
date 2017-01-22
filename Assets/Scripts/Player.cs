@@ -10,7 +10,7 @@ public class Player : MonoBehaviour {
     [SerializeField] Animator anim;
     bool playing;
     public CameraEffects cameraEffects;
-    public Camera camera;
+    public Camera cameraObj;
 
     public static float TWO_PI = Mathf.PI * 2f;
     public static float minXSpeed = 5f;
@@ -81,7 +81,7 @@ public class Player : MonoBehaviour {
         isPressing = false;
         isMovingFree = false;
         playerPosition = transform.position;
-        cameraPosition = camera.transform.position;
+		cameraPosition = cameraObj.transform.position;
         Reset();
         cameraDeltaX = cameraPosition.x - playerPosition.x;
         setAmplitude(amplitude); // Solo para actualizar las cosas que dependen de la amp
@@ -203,7 +203,7 @@ public class Player : MonoBehaviour {
         spriteRenderer.transform.eulerAngles = spriteRotation;
 
         cameraPosition.x = playerPosition.x + cameraDeltaX;
-        camera.transform.position = cameraPosition;
+		cameraObj.transform.position = cameraPosition;
     }
 
     void UpdateTrailColor() {
@@ -257,7 +257,7 @@ public class Player : MonoBehaviour {
 		periodTimer = 0f;
         transform.position = playerPosition;
         cameraPosition.x = 0;
-        camera.transform.position = cameraPosition;
+		cameraObj.transform.position = cameraPosition;
         isPressing = false;
         isMovingFree = false;
         UpdateTrailColor();
