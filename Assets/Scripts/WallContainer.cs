@@ -33,8 +33,6 @@ public class WallContainer : MonoBehaviour {
         for(int i = 0; i < coins.Length; i++) {
             coins[i].Init();
         }
-
-        gameObject.SetActive(false);
     }
 
     public void reset() {

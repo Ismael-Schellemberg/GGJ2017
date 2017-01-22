@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class LevelManager : MonoBehaviour {
 
+    public GameObject startPanel;
+    public GameObject scorePanel;
+
     [SerializeField] PowerUp[] powerupPrefabs;
     [SerializeField] float powerUpCooldown = 15;
     float powerUpTimer;
@@ -36,6 +39,13 @@ public class LevelManager : MonoBehaviour {
     private Dictionary<int, List<WallContainer>> cachedWalls = new Dictionary<int, List<WallContainer>>();
 
     private bool initialized = false;
+
+    bool playing = false;
+
+    void Start() {
+        startPanel.SetActive(true);
+        scorePanel.SetActive(false);
+    }
 
     void init() {
         if(!initialized) {
@@ -92,14 +102,14 @@ public class LevelManager : MonoBehaviour {
     private WallContainer getNextWallContainer() {
         WallContainer container = null;
 
-        bool useRareWall = normalWallsCounter > 5 && wallsSinceLastRare >= nextFrequentWallAmount; // wallsSinceLastRare > minWallsBetweenRares ? Random.value < 0.2f : false;
+        bool useRareWall = playing && (normalWallsCounter > 5 && wallsSinceLastRare >= nextFrequentWallAmount); // wallsSinceLastRare > minWallsBetweenRares ? Random.value < 0.2f : false;
         
         int maxIndex = useRareWall ? wallsRare.Length : wallsFrequent.Length;
         int index = Random.Range(0, maxIndex);
         int wallId = index;
         if(useRareWall) {
             wallId += wallsFrequent.Length;
-            Debug.Log("selectedWallid = " + wallId + ", previous = " + previousRareWallId + ", previousPrevious = " + previousPreviousRareWallId);
+
             while(wallId == previousRareWallId || wallId == previousPreviousRareWallId) {
                 index = Random.Range(0, maxIndex);
                 wallId = index + wallsFrequent.Length;
@@ -144,6 +154,7 @@ public class LevelManager : MonoBehaviour {
 		
         firstWall = null;
         lastX = -cameraHorizontalSize;
+
         while(needsNewWall()) {
             addRandomWall();
         }
@@ -157,11 +168,14 @@ public class LevelManager : MonoBehaviour {
     }
 
     void Update() {
+        if(!playing)
+            return;
+
         if(needsNewWall()) {
             addRandomWall();
         }
         checkCacheFirstWall();
-
+       
         powerUpTimer += Time.deltaTime;
         if(powerUpTimer > powerUpCooldown) {
             powerUpTimer = 0;
@@ -197,5 +211,14 @@ public class LevelManager : MonoBehaviour {
             cachedWalls[wall.wallId] = equivalentWalls;
         }
         equivalentWalls.Add(wall);
+    }
+
+    public void StartGame() {
+        playing = true;
+        player.gameObject.SetActive(true);
+        player.Reset();
+        Reset();
+        startPanel.SetActive(false);
+        scorePanel.SetActive(true);
     }
 }

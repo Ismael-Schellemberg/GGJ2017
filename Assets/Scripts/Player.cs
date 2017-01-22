@@ -75,6 +75,18 @@ public class Player : MonoBehaviour {
     // amplitude 2   - periodDuration 4
     void Awake() {
         Instance = this;
+
+        if(spriteRenderer == null)
+            spriteRenderer = gameObject.GetComponentInChildren<SpriteRenderer>();
+        playing = false;
+        isPressing = false;
+        isMovingFree = false;
+        playerPosition = transform.position;
+        cameraPosition = cameraObj.transform.position;
+        cameraDeltaX = 4f;
+        setAmplitude(amplitude); // Solo para actualizar las cosas que dependen de la amp
+
+        UpdateTrailColor();
     }
 
     private float getXSpeed(float amp) {
@@ -93,21 +105,6 @@ public class Player : MonoBehaviour {
         else {
             return 35f * amp;
         }
-    }
-
-    void Start() {
-        if(spriteRenderer == null)
-            spriteRenderer = gameObject.GetComponentInChildren<SpriteRenderer>();
-        playing = false;
-        isPressing = false;
-        isMovingFree = false;
-        playerPosition = transform.position;
-        cameraPosition = cameraObj.transform.position;
-        Reset();
-        cameraDeltaX = cameraPosition.x - playerPosition.x;
-        setAmplitude(amplitude); // Solo para actualizar las cosas que dependen de la amp
-
-        UpdateTrailColor();
     }
 
     void Update() {
@@ -310,7 +307,7 @@ public class Player : MonoBehaviour {
         }
     }
 
-    void Reset() {
+    public void Reset() {
         AudioManager.Instance.PlaySpawn();
         xSpeed = 2f;
         points = 0;

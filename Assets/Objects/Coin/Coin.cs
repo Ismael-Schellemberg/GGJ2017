@@ -10,7 +10,6 @@ public class Coin : MonoBehaviour {
 
     public void Init() {
         originPosition = transform.localPosition;
-        Debug.Log(originPosition);
         colider.enabled = true;
         anim.speed = Random.Range(0.8f, 1.2f);
     }
