@@ -5,10 +5,10 @@ using UnityEngine;
 public class LevelManager : MonoBehaviour {
 
     [SerializeField] WallContainer[] wallsFrequent;
-	[SerializeField] WallContainer[] wallsRare;
+    [SerializeField] WallContainer[] wallsRare;
     [SerializeField] Player player;
     [SerializeField] float xSpeed;
-	[SerializeField] int minWallsBetweenRares = 5;
+    [SerializeField] int minWallsBetweenRares = 5;
 
     private float visibleHeight;
     private float visibleWidth;
@@ -17,40 +17,40 @@ public class LevelManager : MonoBehaviour {
     private float lastX;
     private WallContainer firstWall;
 
-	private int wallsSinceLastRare = 0;
+    private int wallsSinceLastRare = 0;
 
 
     private List<WallContainer> visibleWalls = new List<WallContainer>();
 
-	private bool initialized = false;
+    private bool initialized = false;
 
-//    void Start() {
-//		init ();
-//    }
+    //    void Start() {
+    //		init ();
+    //    }
 
-	void init() {
-		if (!initialized) {
-			initialized = true;
+    void init() {
+        if(!initialized) {
+            initialized = true;
 
-			visibleHeight = 2.0f * (-Camera.main.transform.position.z) * Mathf.Tan(Camera.main.fieldOfView * 0.5f * Mathf.Deg2Rad);
-			//        visibleHeight = Camera.main.orthographicSize * 2f;
-			visibleWidth = visibleHeight * Camera.main.aspect;
-			cameraHorizontalSize = visibleWidth / 2f;
+            visibleHeight = 2.0f * (-Camera.main.transform.position.z) * Mathf.Tan(Camera.main.fieldOfView * 0.5f * Mathf.Deg2Rad);
+            //        visibleHeight = Camera.main.orthographicSize * 2f;
+            visibleWidth = visibleHeight * Camera.main.aspect;
+            cameraHorizontalSize = visibleWidth / 2f;
 
-			lastX = -cameraHorizontalSize;
+            lastX = -cameraHorizontalSize;
 //			Debug.Log ("first lastX = " + lastX);
 
-			for (int i = 0; i < wallsFrequent.Length; i++) {
-				wallsFrequent[i].Init();
-				wallsFrequent[i].wallId = i;
-			}
+            for(int i = 0; i < wallsFrequent.Length; i++) {
+                wallsFrequent[i].Init();
+                wallsFrequent[i].wallId = i;
+            }
 
-			for (int i = 0; i < wallsRare.Length; i++) {
-				wallsRare[i].Init();
-				wallsRare[i].wallId = wallsFrequent.Length + i;
-			}
-		}
-	}
+            for(int i = 0; i < wallsRare.Length; i++) {
+                wallsRare[i].Init();
+                wallsRare[i].wallId = wallsFrequent.Length + i;
+            }
+        }
+    }
 
     private void addRandomWall() {
         WallContainer container = getNextWallContainer();
@@ -77,20 +77,19 @@ public class LevelManager : MonoBehaviour {
     private WallContainer getNextWallContainer() {
         WallContainer container = null;
 
-		bool useRareWall = wallsSinceLastRare > minWallsBetweenRares ? Random.value < 0.2f : false;
-
-
-		int maxIndex = useRareWall ? wallsRare.Length : wallsFrequent.Length;
-		int index = Random.Range(0, maxIndex);
-		int wallId = index;
-		if (useRareWall) {
-			wallId += wallsFrequent.Length;
-			wallsSinceLastRare = 0;
-		} else {
-			wallsSinceLastRare++;
-		}
+        bool useRareWall = wallsSinceLastRare > minWallsBetweenRares ? Random.value < 0.2f : false;
+        
+        int maxIndex = useRareWall ? wallsRare.Length : wallsFrequent.Length;
+        int index = Random.Range(0, maxIndex);
+        int wallId = index;
+        if(useRareWall) {
+            wallId += wallsFrequent.Length;
+            wallsSinceLastRare = 0;
+        } else {
+            wallsSinceLastRare++;
+        }
 				
-		WallContainer prefab = useRareWall ? wallsRare[index] : wallsFrequent[index];
+        WallContainer prefab = useRareWall ? wallsRare[index] : wallsFrequent[index];
         container = (WallContainer)GameObject.Instantiate(prefab);
         container.wallId = prefab.wallId;
         container.Init();
@@ -101,19 +100,19 @@ public class LevelManager : MonoBehaviour {
     }
 
     public void Reset() {
-		init ();
+        init();
 
         WallContainer[] toDelete = visibleWalls.ToArray();
         visibleWalls.Clear();
         for(int i = 0; i < toDelete.Length; i++) {
             Destroy(toDelete[i].gameObject);
         }
-		firstWall = null;
+        firstWall = null;
         lastX = -cameraHorizontalSize;
-        while (needsNewWall()) {
+        while(needsNewWall()) {
             addRandomWall();
         }
-		firstWall = visibleWalls [0];
+        firstWall = visibleWalls[0];
     }
 
     void Update() {
@@ -126,14 +125,14 @@ public class LevelManager : MonoBehaviour {
     private void checkCacheFirstWall() {
         float leftX = Camera.main.transform.position.x - cameraHorizontalSize;
 
-		if (firstWall != null && leftX > firstWall.maxX) {
-			firstWall.gameObject.SetActive(false);
-			visibleWalls.Remove(firstWall);
-			Destroy(firstWall.gameObject);
-			firstWall = null;
+        if(firstWall != null && leftX > firstWall.maxX) {
+            firstWall.gameObject.SetActive(false);
+            visibleWalls.Remove(firstWall);
+            Destroy(firstWall.gameObject);
+            firstWall = null;
 
-			if (visibleWalls.Count > 0)
-				firstWall = visibleWalls[0];
+            if(visibleWalls.Count > 0)
+                firstWall = visibleWalls[0];
         }
     }
 }
