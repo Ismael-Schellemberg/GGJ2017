@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: 6ef5719fb0d1f42229bcedebf874b0ee
+timeCreated: 1485057121
+licenseType: Pro
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Outline Pixel7
+  fontNames:
+  - Outline Pixel7
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
