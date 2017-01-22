@@ -11,6 +11,8 @@ public class Paralax : MonoBehaviour {
 
     void Update() {
         position.x -= player.xSpeed * factor * Time.deltaTime;
-        transform.position = position;
+        if(position.x < maxX)
+            position.x = position.x - maxX;
+        transform.localPosition = position;
     }
 }
