@@ -81,11 +81,11 @@ public class Player : MonoBehaviour {
         isMovingFree = false;
         playerPosition = transform.position;
         cameraPosition = camera.transform.position;
+        Reset();
         cameraDeltaX = cameraPosition.x - playerPosition.x;
         setAmplitude(amplitude); // Solo para actualizar las cosas que dependen de la amp
 
         UpdateTrailColor();
-        Reset();
     }
 
     void Update() {
