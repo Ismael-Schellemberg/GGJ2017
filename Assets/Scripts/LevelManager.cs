@@ -38,7 +38,7 @@ public class LevelManager : MonoBehaviour {
 			cameraHorizontalSize = visibleWidth / 2f;
 
 			lastX = -cameraHorizontalSize;
-			Debug.Log ("first lastX = " + lastX);
+//			Debug.Log ("first lastX = " + lastX);
 
 			for (int i = 0; i < wallsFrequent.Length; i++) {
 				wallsFrequent[i].Init();
@@ -63,7 +63,7 @@ public class LevelManager : MonoBehaviour {
 
         lastX = lastX + containerWidth;
 
-		Debug.Log ("Adding wall at " + xPos + ", new lastX = " + lastX);
+//		Debug.Log ("Adding wall at " + xPos + ", new lastX = " + lastX);
 //        container.maxX = lastX;
 
         visibleWalls.Add(container);

@@ -40,6 +40,7 @@ public class Player : MonoBehaviour {
     Vector3 playerPosition = Vector3.zero;
     Vector3 spriteRotation = Vector3.zero;
     Vector3 lastPlayerMovement = Vector3.zero;
+	float lastXSpeed;
     Vector3 cameraPosition = Vector3.zero;
     float cameraDeltaX;
 
@@ -56,7 +57,7 @@ public class Player : MonoBehaviour {
     // amplitude 2   - periodDuration 4
 
     private float getXSpeed(float amp) {
-        return 5f;
+		return xSpeed;
 //        float result = -(amp * 2.5f) + 10;
 //        return result;
     }
@@ -98,8 +99,10 @@ public class Player : MonoBehaviour {
 
         if(isMovingFree) {
             if(isPressing) {
+				Debug.Log ("isMovingFree, isPressing, delta = " + lastPlayerMovement + ", frame = " + Time.frameCount);
                 playerPosition += lastPlayerMovement;
             } else {
+				Debug.Log ("libero tecla");
                 // Tengo que terminar de moverme libremente y volver a oscilar.
 
                 // EXPLICACION ALGORITMO
@@ -158,12 +161,12 @@ public class Player : MonoBehaviour {
 //				lerpIncreasesAmplitude = targetAmplitude > amplitude;
 //                lerpSpeed = (targetAmplitude - amplitude) / lerpDuration;
 
-                Debug.Log("curvePercentage = " + curvePercentage + ", periodPercentage = " + periodPercentage
-                + ", currentHeightPercentage = " + currentHeightPercentage + ", targetAmplitude = " + targetAmplitude);
+//                Debug.Log("curvePercentage = " + curvePercentage + ", periodPercentage = " + periodPercentage
+//                + ", currentHeightPercentage = " + currentHeightPercentage + ", targetAmplitude = " + targetAmplitude);
 
 					
                 periodTimer = periodDuration * curvePercentage; // Ajusto el tiempo en el que estoy para que no se genere el salto
-                Debug.Log("new periodTimer = " + periodTimer);
+//                Debug.Log("new periodTimer = " + periodTimer);
                 isMovingFree = false;
             }
         }
@@ -188,13 +191,17 @@ public class Player : MonoBehaviour {
 
         // Esto no puede estar en un else, porque el instante en que dejo de moverme libre tengo que controlar el movimiento aca y no arriba
         if(!isMovingFree) {
-            if(isPressing) {
+			if(isPressing) {
+				Debug.Log ("aprieto tecla");
+				Debug.Log ("!isMovingFree, isPressing, delta = " + lastPlayerMovement + ", frame = " + Time.frameCount);
                 // comienzo a moverme libre
                 isMovingFree = true;
                 playerPosition += lastPlayerMovement;
             } else {
-                // oscilo
+				// oscilo
+				lastXSpeed = xSpeed;
                 playerPosition.x += xSpeed * Time.deltaTime;
+				Debug.Log ("!isMovingFree, !isPressing, delta = " + (xSpeed * Time.deltaTime) + ", frame = " + Time.frameCount);
 				
                 float frequencyMultiplier = TWO_PI / periodDuration;
                 float periodTime = periodTimer * frequencyMultiplier;
@@ -214,6 +221,7 @@ public class Player : MonoBehaviour {
         }
 
         lastPlayerMovement = playerPosition - transform.position;
+//		lastPlayerMovement = lastPlayerMovement / 
 
         transform.position = playerPosition;
         spriteRenderer.transform.eulerAngles = spriteRotation;
@@ -240,7 +248,7 @@ public class Player : MonoBehaviour {
         xSpeed = getXSpeed(amplitude);
         periodDuration = getPeriodDuration(amplitude);
         rotationMax = getRotationMax(amplitude);
-        Debug.Log("Setting new amplitude " + amplitude + ", xSpeed = " + xSpeed + ", periodDuration = " + periodDuration);
+//        Debug.Log("Setting new amplitude " + amplitude + ", xSpeed = " + xSpeed + ", periodDuration = " + periodDuration);
     }
 
     void OnCollisionEnter2D(Collision2D coll) {
@@ -270,6 +278,8 @@ public class Player : MonoBehaviour {
         UpdateScore();
         points = 0;
         playerPosition = new Vector3(-4f, 0f, 0f);
+		setAmplitude (1f);
+		periodTimer = 0f;
         transform.position = playerPosition;
         cameraPosition.x = 0;
         camera.transform.position = cameraPosition;
