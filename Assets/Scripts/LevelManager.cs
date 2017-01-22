@@ -28,6 +28,9 @@ public class LevelManager : MonoBehaviour {
     private int wallsSinceLastRare = 0;
     private int normalWallsCounter = 0;
 
+	private int previousRareWallId = -1;
+	private int previousPreviousRareWallId = -1;
+
 
 	private List<WallContainer> visibleWalls = new List<WallContainer>();
 	private Dictionary<int, List<WallContainer>> cachedWalls = new Dictionary<int, List<WallContainer>>();
@@ -94,8 +97,17 @@ public class LevelManager : MonoBehaviour {
         int maxIndex = useRareWall ? wallsRare.Length : wallsFrequent.Length;
         int index = Random.Range(0, maxIndex);
         int wallId = index;
-        if(useRareWall) {
-            wallId += wallsFrequent.Length;
+        if (useRareWall) {
+			wallId += wallsFrequent.Length;
+			Debug.Log ("selectedWallid = " + wallId + ", previous = " + previousRareWallId + ", previousPrevious = " + previousPreviousRareWallId);
+			while (wallId == previousRareWallId || wallId == previousPreviousRareWallId) {
+				index = Random.Range(0, maxIndex);
+				wallId = index + wallsFrequent.Length;
+			}
+
+			previousPreviousRareWallId = previousRareWallId;
+			previousRareWallId = wallId;
+
             wallsSinceLastRare = 0;
             nextFrequentWallAmount = Random.Range(minFrequentWalls, maxFrequentWalls + 1);
         } else {
@@ -108,7 +120,6 @@ public class LevelManager : MonoBehaviour {
 		if (cache != null && cache.Count > 0) {
 			container = cache[0];
 			cache.Remove(container);
-			container.reset ();
 		} else {
 			WallContainer prefab = useRareWall ? wallsRare[index] : wallsFrequent[index];
 			container = (WallContainer)GameObject.Instantiate(prefab);
@@ -118,6 +129,8 @@ public class LevelManager : MonoBehaviour {
 		}
 
         container.gameObject.SetActive(true);
+
+		container.reset ();
         return container;
     }
 
