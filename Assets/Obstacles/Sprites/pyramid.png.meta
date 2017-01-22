@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: db44a4b6adee64181b03e4a146c55e95
-timeCreated: 1485019268
+timeCreated: 1485106675
 licenseType: Pro
 TextureImporter:
   fileIDToRecycleName:
@@ -112,20 +112,7 @@ TextureImporter:
         width: 387
         height: 324
       alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: pyramid_1
-      rect:
-        serializedVersion: 2
-        x: 493
-        y: 1213
-        width: 387
-        height: 324
-      alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -138,20 +125,7 @@ TextureImporter:
         width: 384
         height: 318
       alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: pyramid_3
-      rect:
-        serializedVersion: 2
-        x: 20
-        y: 822
-        width: 404
-        height: 326
-      alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -159,38 +133,12 @@ TextureImporter:
       name: pyramid_4
       rect:
         serializedVersion: 2
-        x: 478
+        x: 476
         y: 822
         width: 404
         height: 326
       alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: pyramid_5
-      rect:
-        serializedVersion: 2
-        x: 941
-        y: 816
-        width: 384
-        height: 318
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: pyramid_6
-      rect:
-        serializedVersion: 2
-        x: 25
-        y: 428
-        width: 405
-        height: 331
-      alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -203,7 +151,7 @@ TextureImporter:
         width: 405
         height: 331
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -216,20 +164,7 @@ TextureImporter:
         width: 387
         height: 324
       alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: pyramid_9
-      rect:
-        serializedVersion: 2
-        x: 28
-        y: 33
-        width: 387
-        height: 324
-      alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0

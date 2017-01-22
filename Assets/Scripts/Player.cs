@@ -5,6 +5,18 @@ using UnityEngine.UI;
 
 public class Player : MonoBehaviour {
     public static bool isMagnetActivated = false;
+    public static bool isSpeedActivated = false;
+    public static bool isInvulnerabilityActivated = false;
+
+    public Text magnetTimerText;
+    float magnetTime;
+    public Text speedTimerText;
+    float speedTime;
+    public Text invulnerabilityTimerText;
+    float invulnerabilityTime;
+
+    public static Player Instance;
+    public ParticleSystem invulnerabilityPS;
 
     public Text scoreText;
     public Text highscoreText;
@@ -12,7 +24,7 @@ public class Player : MonoBehaviour {
     int points;
     public LevelManager manager;
     [SerializeField] Animator anim;
-    bool playing;
+    bool playing = false;
     public CameraEffects cameraEffects;
     public Camera cameraObj;
 
@@ -61,6 +73,9 @@ public class Player : MonoBehaviour {
 
     // amplitude 0.2 - periodDuration 0.4
     // amplitude 2   - periodDuration 4
+    void Awake() {
+        Instance = this;
+    }
 
     private float getXSpeed(float amp) {
         return xSpeed;
@@ -83,7 +98,7 @@ public class Player : MonoBehaviour {
     void Start() {
         if(spriteRenderer == null)
             spriteRenderer = gameObject.GetComponentInChildren<SpriteRenderer>();
-		
+        playing = false;
         isPressing = false;
         isMovingFree = false;
         playerPosition = transform.position;
@@ -100,11 +115,7 @@ public class Player : MonoBehaviour {
             return;
 
         isPressing = Input.GetKey(KeyCode.Space) || Input.GetMouseButton(0);
-        if(isPressing)
-            spriteRenderer.color = fixedColor;
-        else
-            spriteRenderer.color = freeColor;
-
+        UpdateTrailColor();
         if(isMovingFree) {
             if(isPressing) {
 //				Debug.Log ("isMovingFree, isPressing, delta = " + lastPlayerMovement + ", frame = " + Time.frameCount);
@@ -223,6 +234,9 @@ public class Player : MonoBehaviour {
         xSpeed += xAcceleration * Time.deltaTime;
         if(xSpeed >= maxXSpeed)
             xSpeed = maxXSpeed;
+
+        if(isSpeedActivated)
+            xSpeed *= 1.3f;
     }
 
     void moveFree(bool useModifier) {
@@ -235,10 +249,13 @@ public class Player : MonoBehaviour {
     }
 
     void UpdateTrailColor() {
-        if(isMovingFree)
+        if(isMovingFree) {
             trailRend.materials[0].SetColor("_TintColor", freeColor);
-        else
+            spriteRenderer.color = freeColor;
+        } else {
             trailRend.materials[0].SetColor("_TintColor", fixedColor);
+            spriteRenderer.color = fixedColor;
+        }
     }
 
 
@@ -257,13 +274,18 @@ public class Player : MonoBehaviour {
         if(!playing)
             return;
 
-        if(coll.gameObject.tag == "Wall" || coll.gameObject.tag == "Obstacle") {
-            cameraEffects.ShakeCamera(20f, 0.02f);
-            spriteRenderer.color = freeColor;
-            playing = false;
-            trailRend.enabled = false;
-            anim.SetTrigger("die");  
+        if(coll.gameObject.tag == "Wall") {
+            Die(); 
         }
+    }
+
+    void Die() {
+        AudioManager.Instance.PlayDead();
+        cameraEffects.ShakeCamera(20f, 0.02f);
+        spriteRenderer.color = freeColor;
+        playing = false;
+        trailRend.enabled = false;
+        anim.SetTrigger("die"); 
     }
 
     public void OnBornAnimationEnded() {
@@ -289,6 +311,7 @@ public class Player : MonoBehaviour {
     }
 
     void Reset() {
+        AudioManager.Instance.PlaySpawn();
         xSpeed = 2f;
         points = 0;
         UpdateScore();
@@ -312,7 +335,13 @@ public class Player : MonoBehaviour {
         if(!playing)
             return;
         
-        if(col.tag == "Coin") {
+        if(col.tag == "Obstacle") {
+            if(isInvulnerabilityActivated)
+                invulnerabilityPS.Emit(20);
+            else
+                Die();
+        } else if(col.tag == "Coin") {
+            AudioManager.Instance.PlayCoin();
             points++;
             SaveScore();
             col.GetComponent<Coin>().Hit();
@@ -332,6 +361,80 @@ public class Player : MonoBehaviour {
     }
 
     public void ActivateMagnet() {
+        if(magnetTime > 0)
+            magnetTime += 5f;
+        else
+            StartCoroutine(MagnetTimer(5f));
+    }
+
+    IEnumerator MagnetTimer(float totalTime) {
         isMagnetActivated = true;
+
+        magnetTimerText.text = "0";
+        magnetTimerText.gameObject.SetActive(true);
+        while(magnetTime < totalTime) {
+            magnetTime += Time.deltaTime;
+
+            if(!playing)
+                break;
+
+            magnetTimerText.text = Mathf.Round(totalTime - magnetTime).ToString();
+            yield return null;
+        }
+        magnetTime = 0;
+        magnetTimerText.gameObject.SetActive(false);
+        isMagnetActivated = false;
+    }
+
+    public void ActivateSpeed() {
+        if(speedTime > 0)
+            speedTime += 2f;
+        else
+            StartCoroutine(SpeedTimer(2f));
+    }
+
+    IEnumerator SpeedTimer(float totalTime) {
+        isSpeedActivated = true;
+
+        speedTimerText.text = "0";
+        speedTimerText.gameObject.SetActive(true);
+        while(speedTime < totalTime) {
+            speedTime += Time.deltaTime;
+
+            if(!playing)
+                break;
+
+            speedTimerText.text = Mathf.Round(totalTime - speedTime).ToString();
+            yield return null;
+        }
+        speedTime = 0;
+        speedTimerText.gameObject.SetActive(false);
+        isSpeedActivated = false;
+    }
+
+    public void ActivateInvulnerablity() {
+        if(invulnerabilityTime > 0)
+            invulnerabilityTime += 7f;
+        else
+            StartCoroutine(InvulnerablityTimer(7f));
+    }
+
+    IEnumerator InvulnerablityTimer(float totalTime) {
+        isInvulnerabilityActivated = true;
+
+        invulnerabilityTimerText.text = "0";
+        invulnerabilityTimerText.gameObject.SetActive(true);
+        while(invulnerabilityTime < totalTime) {
+            invulnerabilityTime += Time.deltaTime;
+
+            if(!playing)
+                break;
+
+            invulnerabilityTimerText.text = Mathf.Round(totalTime - invulnerabilityTime).ToString();
+            yield return null;
+        }
+        invulnerabilityTime = 0;
+        invulnerabilityTimerText.gameObject.SetActive(false);
+        isInvulnerabilityActivated = false;
     }
 }

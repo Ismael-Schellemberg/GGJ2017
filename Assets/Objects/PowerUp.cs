@@ -7,7 +7,7 @@ public class PowerUp : MonoBehaviour {
     float periodDuration;
     float periodTimer = 0;
 
-    Vector2 position = new Vector2(15f, 0f);
+    Vector2 position;
     public Player player;
 
     bool moving;
@@ -17,7 +17,7 @@ public class PowerUp : MonoBehaviour {
 
     void Start() {
         moving = true;
-        transform.localPosition = position;
+        position = transform.localPosition;
         periodDuration = amplitude * 2f;
 
         colider.enabled = true;
@@ -34,7 +34,6 @@ public class PowerUp : MonoBehaviour {
         float periodTime = periodTimer * frequencyMultiplier;
 
         float periodSin = Mathf.Sin(periodTime);
-        float periodCos = Mathf.Cos(periodTime);
 
         position.y = periodSin * amplitude;
         position.x += player.xSpeed * 0.8f * Time.deltaTime;

@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: a648d268f52d94de3b625db87871cddb
-timeCreated: 1485018857
+timeCreated: 1485106310
 licenseType: Pro
 TextureImporter:
   fileIDToRecycleName:
@@ -110,20 +110,7 @@ TextureImporter:
         width: 316
         height: 332
       alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: cube_1
-      rect:
-        serializedVersion: 2
-        x: 378
-        y: 729
-        width: 316
-        height: 332
-      alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -136,7 +123,7 @@ TextureImporter:
         width: 251
         height: 306
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -149,33 +136,7 @@ TextureImporter:
         width: 303
         height: 327
       alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: cube_4
-      rect:
-        serializedVersion: 2
-        x: 394
-        y: 377
-        width: 303
-        height: 327
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: cube_5
-      rect:
-        serializedVersion: 2
-        x: 773
-        y: 388
-        width: 251
-        height: 306
-      alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -188,20 +149,7 @@ TextureImporter:
         width: 288
         height: 321
       alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: cube_7
-      rect:
-        serializedVersion: 2
-        x: 396
-        y: 19
-        width: 288
-        height: 321
-      alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0

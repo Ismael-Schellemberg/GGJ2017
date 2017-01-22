@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: ab3417ee775b24366a19b511eb728a84
-timeCreated: 1485019204
+timeCreated: 1485106395
 licenseType: Pro
 TextureImporter:
   fileIDToRecycleName:
@@ -126,20 +126,7 @@ TextureImporter:
         width: 285
         height: 313
       alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: d20_1
-      rect:
-        serializedVersion: 2
-        x: 349
-        y: 1046
-        width: 285
-        height: 313
-      alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -152,20 +139,7 @@ TextureImporter:
         width: 290
         height: 314
       alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: d20_3
-      rect:
-        serializedVersion: 2
-        x: 1008
-        y: 1048
-        width: 290
-        height: 314
-      alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -178,7 +152,7 @@ TextureImporter:
         width: 285
         height: 315
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -191,20 +165,7 @@ TextureImporter:
         width: 285
         height: 318
       alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: d20_6
-      rect:
-        serializedVersion: 2
-        x: 22
-        y: 703
-        width: 285
-        height: 315
-      alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -217,20 +178,7 @@ TextureImporter:
         width: 282
         height: 314
       alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: d20_8
-      rect:
-        serializedVersion: 2
-        x: 685
-        y: 703
-        width: 282
-        height: 314
-      alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -243,33 +191,7 @@ TextureImporter:
         width: 284
         height: 316
       alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: d20_10
-      rect:
-        serializedVersion: 2
-        x: 1336
-        y: 701
-        width: 284
-        height: 316
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: d20_11
-      rect:
-        serializedVersion: 2
-        x: 1667
-        y: 698
-        width: 285
-        height: 318
-      alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -282,20 +204,7 @@ TextureImporter:
         width: 280
         height: 315
       alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: d20_13
-      rect:
-        serializedVersion: 2
-        x: 352
-        y: 357
-        width: 280
-        height: 315
-      alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -308,20 +217,7 @@ TextureImporter:
         width: 287
         height: 315
       alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: d20_15
-      rect:
-        serializedVersion: 2
-        x: 1006
-        y: 358
-        width: 287
-        height: 315
-      alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -334,7 +230,7 @@ TextureImporter:
         width: 290
         height: 320
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -347,20 +243,7 @@ TextureImporter:
         width: 288
         height: 312
       alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: d20_18
-      rect:
-        serializedVersion: 2
-        x: 21
-        y: 13
-        width: 290
-        height: 320
-      alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -373,20 +256,7 @@ TextureImporter:
         width: 288
         height: 316
       alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: d20_20
-      rect:
-        serializedVersion: 2
-        x: 677
-        y: 13
-        width: 288
-        height: 316
-      alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -399,33 +269,7 @@ TextureImporter:
         width: 287
         height: 314
       alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: d20_22
-      rect:
-        serializedVersion: 2
-        x: 1337
-        y: 13
-        width: 287
-        height: 314
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: d20_23
-      rect:
-        serializedVersion: 2
-        x: 1666
-        y: 14
-        width: 288
-        height: 312
-      alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0

@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: ec9e0a5094d244b96a5cceddf521aaa0
-timeCreated: 1485019537
+timeCreated: 1485106785
 licenseType: Pro
 TextureImporter:
   fileIDToRecycleName:
@@ -114,20 +114,7 @@ TextureImporter:
         width: 299
         height: 293
       alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: tesseract_1
-      rect:
-        serializedVersion: 2
-        x: 393
-        y: 666
-        width: 299
-        height: 293
-      alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -135,38 +122,12 @@ TextureImporter:
       name: tesseract_2
       rect:
         serializedVersion: 2
-        x: 774
+        x: 772
         y: 670
         width: 280
         height: 282
       alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: tesseract_3
-      rect:
-        serializedVersion: 2
-        x: 1096
-        y: 669
-        width: 299
-        height: 286
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: tesseract_4
-      rect:
-        serializedVersion: 2
-        x: 54
-        y: 345
-        width: 280
-        height: 282
-      alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -175,24 +136,11 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 393
-        y: 352
+        y: 350
         width: 305
         height: 273
       alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: tesseract_6
-      rect:
-        serializedVersion: 2
-        x: 753
-        y: 352
-        width: 305
-        height: 273
-      alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -205,7 +153,7 @@ TextureImporter:
         width: 300
         height: 288
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -214,24 +162,11 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 22
-        y: 31
+        y: 29
         width: 303
         height: 273
       alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: tesseract_9
-      rect:
-        serializedVersion: 2
-        x: 382
-        y: 31
-        width: 303
-        height: 273
-      alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -244,20 +179,7 @@ TextureImporter:
         width: 299
         height: 286
       alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: tesseract_11
-      rect:
-        serializedVersion: 2
-        x: 1102
-        y: 17
-        width: 300
-        height: 288
-      alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0

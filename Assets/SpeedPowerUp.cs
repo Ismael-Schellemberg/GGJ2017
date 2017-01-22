@@ -5,6 +5,6 @@ using UnityEngine;
 public class SpeedPowerUp : PowerUp {
 
     protected override void OnHit() {
-        
+        player.ActivateSpeed();
     }
 }
