@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class WallContainer : MonoBehaviour {
 
-    public Wall[] walls;
+    private Wall[] walls;
+	private Coin[] coins;
     public float width;
     public int wallId;
 	public float maxX {
@@ -16,6 +17,10 @@ public class WallContainer : MonoBehaviour {
     public void Init() {
         float leftEdge = 0f;
 		float rightEdge = 0f;
+
+		walls = gameObject.GetComponentsInChildren<Wall> ();
+		coins = gameObject.GetComponentsInChildren<Coin> ();
+
         for (int i = 0; i < walls.Length; i++) {
 			if (i == 0 || leftEdge > walls[i].minX)
 				leftEdge = walls[i].minX;
@@ -24,4 +29,10 @@ public class WallContainer : MonoBehaviour {
         }
 		width = rightEdge - leftEdge;
     }
+
+	public void reset() {
+		foreach (Coin coin in coins) {
+			coin.reset ();
+		}
+	}
 }

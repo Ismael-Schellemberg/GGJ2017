@@ -18,4 +18,9 @@ public class Coin : MonoBehaviour {
         colider.enabled = false;
         anim.SetBool("hit", true);
     }
+
+	public void reset() {
+		colider.enabled = true;
+		anim.SetBool("hit", false);
+	}
 }

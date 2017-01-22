@@ -29,7 +29,8 @@ public class LevelManager : MonoBehaviour {
     private int normalWallsCounter = 0;
 
 
-    private List<WallContainer> visibleWalls = new List<WallContainer>();
+	private List<WallContainer> visibleWalls = new List<WallContainer>();
+	private Dictionary<int, List<WallContainer>> cachedWalls = new Dictionary<int, List<WallContainer>>();
 
     private bool initialized = false;
 
@@ -53,6 +54,8 @@ public class LevelManager : MonoBehaviour {
             for(int i = 0; i < wallsRare.Length; i++) {
                 wallsRare[i].Init();
                 wallsRare[i].wallId = wallsFrequent.Length + i;
+				wallsRare[i].transform.SetParent(transform);
+				moveWallToCache (wallsRare[i]);
             }
         }
     }
@@ -77,7 +80,11 @@ public class LevelManager : MonoBehaviour {
     private bool needsNewWall() {
         float rightX = Camera.main.transform.position.x + cameraHorizontalSize + 1f; // agregar 1 para que haya margen
         return lastX < rightX;
-    }
+	}
+
+	private List<WallContainer> getCachedWalls(int wallId) {
+		return cachedWalls.ContainsKey(wallId) ? cachedWalls[wallId] : null;
+	}
 
     private WallContainer getNextWallContainer() {
         WallContainer container = null;
@@ -96,11 +103,19 @@ public class LevelManager : MonoBehaviour {
             wallsSinceLastRare++;
         }
 				
-        WallContainer prefab = useRareWall ? wallsRare[index] : wallsFrequent[index];
-        container = (WallContainer)GameObject.Instantiate(prefab);
-        container.wallId = prefab.wallId;
-        container.Init();
-        container.transform.SetParent(transform);
+
+		List<WallContainer> cache = getCachedWalls(index);
+		if (cache != null && cache.Count > 0) {
+			container = cache[0];
+			cache.Remove(container);
+			container.reset ();
+		} else {
+			WallContainer prefab = useRareWall ? wallsRare[index] : wallsFrequent[index];
+			container = (WallContainer)GameObject.Instantiate(prefab);
+			container.wallId = prefab.wallId;
+			container.Init();
+			container.transform.SetParent(transform);
+		}
 
         container.gameObject.SetActive(true);
         return container;
@@ -110,11 +125,10 @@ public class LevelManager : MonoBehaviour {
         init();
         powerUpTimer = 0;
         normalWallsCounter = 0;
-        WallContainer[] toDelete = visibleWalls.ToArray();
-        visibleWalls.Clear();
-        for(int i = 0; i < toDelete.Length; i++) {
-            Destroy(toDelete[i].gameObject);
-        }
+
+		while (visibleWalls.Count > 0)
+			moveWallToCache (visibleWalls [0]);
+		
         firstWall = null;
         lastX = -cameraHorizontalSize;
         while(needsNewWall()) {
@@ -148,13 +162,23 @@ public class LevelManager : MonoBehaviour {
         float leftX = Camera.main.transform.position.x - cameraHorizontalSize;
 
         if(firstWall != null && leftX > firstWall.maxX) {
-            firstWall.gameObject.SetActive(false);
-            visibleWalls.Remove(firstWall);
-            Destroy(firstWall.gameObject);
+			moveWallToCache (firstWall);
+
             firstWall = null;
 
             if(visibleWalls.Count > 0)
                 firstWall = visibleWalls[0];
         }
     }
+
+	private void moveWallToCache(WallContainer wall) {
+		wall.gameObject.SetActive(false);
+		visibleWalls.Remove(wall);
+		List<WallContainer> equivalentWalls = getCachedWalls(wall.wallId);
+		if(equivalentWalls == null) {
+			equivalentWalls = new List<WallContainer>();
+			cachedWalls[wall.wallId] = equivalentWalls;
+		}
+		equivalentWalls.Add(wall);
+	}
 }
