@@ -19,8 +19,14 @@ public class Coin : MonoBehaviour {
         anim.SetBool("hit", true);
     }
 
-	public void reset() {
-		colider.enabled = true;
-		anim.SetBool("hit", false);
-	}
+    public void reset() {
+        colider.enabled = true;
+        anim.SetBool("hit", false);
+    }
+
+    void Update() {
+        if(Player.isMagnetActivated) {
+//            transform.position += Vector2.Lerp(transform.position, ())
+        }
+    }
 }

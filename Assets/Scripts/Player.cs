@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class Player : MonoBehaviour {
+    public static bool isMagnetActivated = false;
 
     public Text scoreText;
     public Text highscoreText;
@@ -330,4 +331,7 @@ public class Player : MonoBehaviour {
         highscoreText.text = highscore.ToString();
     }
 
+    public void ActivateMagnet() {
+        isMagnetActivated = true;
+    }
 }
