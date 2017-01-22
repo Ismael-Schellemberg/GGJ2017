@@ -359,7 +359,7 @@ public class Player : MonoBehaviour {
 
     public void ActivateMagnet() {
         if(magnetTime > 0)
-            magnetTime += 5f;
+            magnetTime = Mathf.Max(magnetTime - 5f, 0);
         else
             StartCoroutine(MagnetTimer(5f));
     }
@@ -385,7 +385,7 @@ public class Player : MonoBehaviour {
 
     public void ActivateSpeed() {
         if(speedTime > 0)
-            speedTime += 2f;
+            speedTime = Mathf.Max(speedTime - 2f, 0);
         else
             StartCoroutine(SpeedTimer(2f));
     }
@@ -411,7 +411,7 @@ public class Player : MonoBehaviour {
 
     public void ActivateInvulnerablity() {
         if(invulnerabilityTime > 0)
-            invulnerabilityTime += 7f;
+            invulnerabilityTime = Mathf.Max(invulnerabilityTime - 7f, 0);
         else
             StartCoroutine(InvulnerablityTimer(7f));
     }
