@@ -6,18 +6,22 @@ public class WallContainer : MonoBehaviour {
 
     public Wall[] walls;
     public float width;
-    public float maxX = 0;
     public int wallId;
+	public float maxX {
+		get { 
+			return transform.position.x + width / 2f;
+		}
+	}
 
     public void Init() {
-        float minX = int.MaxValue;
+        float leftEdge = 0f;
+		float rightEdge = 0f;
         for (int i = 0; i < walls.Length; i++) {
-            if (minX > walls[i].minX)
-                minX = walls[i].minX;
-            if (maxX < walls[i].maxX) {
-                maxX = walls[i].maxX;
-            }
+			if (i == 0 || leftEdge > walls[i].minX)
+				leftEdge = walls[i].minX;
+			if (i == 0 || rightEdge < walls[i].maxX)
+				rightEdge = walls[i].maxX;
         }
-		width = maxX - minX;
+		width = rightEdge - leftEdge;
     }
 }
