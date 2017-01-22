@@ -23,11 +23,14 @@ public class Player : MonoBehaviour {
     // La amplitud de la oscilacion
     [SerializeField] float periodDuration = 5f;
     // duracion de la recorrida de un periodo entero (depende de amplitude)
-	public float xSpeed;
+    public float xSpeed;
     // Velocidad horizontal (depende de amplitude)
-    [SerializeField] float turnRadius = 0.05f; // Tiene que estar entre 0f y 0.25f (idealmente no en el borde)
-	[SerializeField] float xAcceleration = 0.2f; // Amount accelerated per second
-    [SerializeField] float rotationMax = 35f; // cuanto varia el angulo del sprite jugador. La imagen esta a 35 grados de estar horizontal
+    [SerializeField] float turnRadius = 0.05f;
+    // Tiene que estar entre 0f y 0.25f (idealmente no en el borde)
+    [SerializeField] float xAcceleration = 0.2f;
+    // Amount accelerated per second
+    [SerializeField] float rotationMax = 35f;
+    // cuanto varia el angulo del sprite jugador. La imagen esta a 35 grados de estar horizontal
     // Tiempo que demora en pasar de la amplitud actual a la nueva
     float targetAmplitude;
     //    float lerpSpeed;
@@ -38,7 +41,7 @@ public class Player : MonoBehaviour {
     Vector3 playerPosition = Vector3.zero;
     Vector3 spriteRotation = Vector3.zero;
     Vector3 lastPlayerMovement = Vector3.zero;
-	float lastDeltaTime;
+    float lastDeltaTime;
     Vector3 cameraPosition = Vector3.zero;
     float cameraDeltaX;
 
@@ -55,7 +58,7 @@ public class Player : MonoBehaviour {
     // amplitude 2   - periodDuration 4
 
     private float getXSpeed(float amp) {
-		return xSpeed;
+        return xSpeed;
 //        float result = -(amp * 2.5f) + 10;
 //        return result;
     }
@@ -79,7 +82,7 @@ public class Player : MonoBehaviour {
         isPressing = false;
         isMovingFree = false;
         playerPosition = transform.position;
-		cameraPosition = cameraObj.transform.position;
+        cameraPosition = cameraObj.transform.position;
         Reset();
         cameraDeltaX = cameraPosition.x - playerPosition.x;
         setAmplitude(amplitude); // Solo para actualizar las cosas que dependen de la amp
@@ -96,7 +99,7 @@ public class Player : MonoBehaviour {
         if(isMovingFree) {
             if(isPressing) {
 //				Debug.Log ("isMovingFree, isPressing, delta = " + lastPlayerMovement + ", frame = " + Time.frameCount);
-				playerPosition += lastPlayerMovement * (Time.deltaTime / lastDeltaTime);
+                playerPosition += lastPlayerMovement * (Time.deltaTime / lastDeltaTime);
             } else {
 //				Debug.Log ("libero tecla");
                 // Tengo que terminar de moverme libremente y volver a oscilar.
@@ -165,14 +168,15 @@ public class Player : MonoBehaviour {
 
         // Esto no puede estar en un else, porque el instante en que dejo de moverme libre tengo que controlar el movimiento aca y no arriba
         if(!isMovingFree) {
-			if(isPressing) {
+            if(isPressing) {
 //				Debug.Log ("aprieto tecla");
 //				Debug.Log ("!isMovingFree, isPressing, delta = " + lastPlayerMovement + ", frame = " + Time.frameCount);
                 // comienzo a moverme libre
                 isMovingFree = true;
-				playerPosition += lastPlayerMovement * (Time.deltaTime / lastDeltaTime);;
+                playerPosition += lastPlayerMovement * (Time.deltaTime / lastDeltaTime);
+                ;
             } else {
-				// oscilo
+                // oscilo
                 playerPosition.x += xSpeed * Time.deltaTime;
 //				Debug.Log ("!isMovingFree, !isPressing, delta = " + (xSpeed * Time.deltaTime) + ", frame = " + Time.frameCount);
 				
@@ -194,16 +198,16 @@ public class Player : MonoBehaviour {
         }
 
         lastPlayerMovement = playerPosition - transform.position;
-		lastDeltaTime = Time.deltaTime;
+        lastDeltaTime = Time.deltaTime;
 //		lastPlayerMovement = lastPlayerMovement /
 
         transform.position = playerPosition;
         spriteRenderer.transform.eulerAngles = spriteRotation;
 
         cameraPosition.x = playerPosition.x + cameraDeltaX;
-		cameraObj.transform.position = cameraPosition;
+        cameraObj.transform.position = cameraPosition;
 
-		xSpeed += xAcceleration * Time.deltaTime;
+        xSpeed += xAcceleration * Time.deltaTime;
     }
 
     void UpdateTrailColor() {
@@ -215,8 +219,8 @@ public class Player : MonoBehaviour {
 
 
     void setAmplitude(float newAmp) {
-		if (newAmp <= 0.03f)
-			newAmp = 0.03f;
+        if(newAmp <= 0.03f)
+            newAmp = 0.03f;
         amplitude = newAmp;
 
 //        xSpeed = getXSpeed(amplitude);
@@ -244,20 +248,28 @@ public class Player : MonoBehaviour {
     }
 
     public void OnDieAnimationEnded() {
+        SaveScore();
         Reset();
         anim.SetTrigger("start");
     }
 
+    void SaveScore() {
+        if(PlayerPrefs.GetInt("highscore", 0) < points) {
+            PlayerPrefs.SetInt("highscore", points);
+            PlayerPrefs.Save();
+        }
+    }
+
     void Reset() {
-        UpdateScore();
         xSpeed = 2f;
         points = 0;
+        UpdateScore();
         playerPosition = new Vector3(-4f, 0f, 0f);
-		setAmplitude (1f);
-		periodTimer = 0f;
+        setAmplitude(1f);
+        periodTimer = 0f;
         transform.position = playerPosition;
         cameraPosition.x = 0;
-		cameraObj.transform.position = cameraPosition;
+        cameraObj.transform.position = cameraPosition;
         isPressing = false;
         isMovingFree = false;
         UpdateTrailColor();
