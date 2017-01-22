@@ -23,13 +23,11 @@ public class Player : MonoBehaviour {
     // La amplitud de la oscilacion
     [SerializeField] float periodDuration = 5f;
     // duracion de la recorrida de un periodo entero (depende de amplitude)
-    public float xSpeed { get; private set; }
+	public float xSpeed;
     // Velocidad horizontal (depende de amplitude)
-    [SerializeField] float turnRadius = 0.05f;
-    // Tiene que estar entre 0f y 0.25f (idealmente no en el borde)
-    //    [SerializeField] float lerpDuration = 0.2f;
-    [SerializeField] float rotationMax = 35f;
-    // cuanto varia el angulo del jugador
+    [SerializeField] float turnRadius = 0.05f; // Tiene que estar entre 0f y 0.25f (idealmente no en el borde)
+	[SerializeField] float xAcceleration = 0.2f; // Amount accelerated per second
+    [SerializeField] float rotationMax = 35f; // cuanto varia el angulo del sprite jugador. La imagen esta a 35 grados de estar horizontal
     // Tiempo que demora en pasar de la amplitud actual a la nueva
     float targetAmplitude;
     //    float lerpSpeed;
@@ -204,6 +202,8 @@ public class Player : MonoBehaviour {
 
         cameraPosition.x = playerPosition.x + cameraDeltaX;
 		cameraObj.transform.position = cameraPosition;
+
+		xSpeed += xAcceleration * Time.deltaTime;
     }
 
     void UpdateTrailColor() {
@@ -219,7 +219,7 @@ public class Player : MonoBehaviour {
 			newAmp = 0.03f;
         amplitude = newAmp;
 
-        xSpeed = getXSpeed(amplitude);
+//        xSpeed = getXSpeed(amplitude);
         periodDuration = getPeriodDuration(amplitude);
         rotationMax = getRotationMax(amplitude);
 //        Debug.Log("Setting new amplitude " + amplitude + ", xSpeed = " + xSpeed + ", periodDuration = " + periodDuration);

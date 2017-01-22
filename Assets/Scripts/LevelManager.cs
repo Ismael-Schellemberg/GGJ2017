@@ -10,6 +10,10 @@ public class LevelManager : MonoBehaviour {
     [SerializeField] float xSpeed;
     [SerializeField] int minWallsBetweenRares = 5;
 
+	[SerializeField] int minFrequentWalls = 2;
+	[SerializeField] int maxFrequentWalls = 5;
+	int nextFrequentWallAmount;
+
     private float visibleHeight;
     private float visibleWidth;
     private float cameraHorizontalSize;
@@ -18,6 +22,7 @@ public class LevelManager : MonoBehaviour {
     private WallContainer firstWall;
 
     private int wallsSinceLastRare = 0;
+	private int normalWallsCounter = 0;
 
 
     private List<WallContainer> visibleWalls = new List<WallContainer>();
@@ -77,7 +82,7 @@ public class LevelManager : MonoBehaviour {
     private WallContainer getNextWallContainer() {
         WallContainer container = null;
 
-        bool useRareWall = wallsSinceLastRare > minWallsBetweenRares ? Random.value < 0.2f : false;
+		bool useRareWall = normalWallsCounter > 5 && wallsSinceLastRare >= nextFrequentWallAmount; // wallsSinceLastRare > minWallsBetweenRares ? Random.value < 0.2f : false;
         
         int maxIndex = useRareWall ? wallsRare.Length : wallsFrequent.Length;
         int index = Random.Range(0, maxIndex);
@@ -85,7 +90,9 @@ public class LevelManager : MonoBehaviour {
         if(useRareWall) {
             wallId += wallsFrequent.Length;
             wallsSinceLastRare = 0;
+			nextFrequentWallAmount = Random.Range (minFrequentWalls, maxFrequentWalls + 1);
         } else {
+			normalWallsCounter++;
             wallsSinceLastRare++;
         }
 				
@@ -101,7 +108,7 @@ public class LevelManager : MonoBehaviour {
 
     public void Reset() {
         init();
-
+		normalWallsCounter = 0;
         WallContainer[] toDelete = visibleWalls.ToArray();
         visibleWalls.Clear();
         for(int i = 0; i < toDelete.Length; i++) {
