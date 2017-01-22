@@ -40,7 +40,7 @@ public class Player : MonoBehaviour {
     Vector3 playerPosition = Vector3.zero;
     Vector3 spriteRotation = Vector3.zero;
     Vector3 lastPlayerMovement = Vector3.zero;
-	float lastXSpeed;
+	float lastDeltaTime;
     Vector3 cameraPosition = Vector3.zero;
     float cameraDeltaX;
 
@@ -93,16 +93,14 @@ public class Player : MonoBehaviour {
         if(!playing)
             return;
 
-//		periodTimer = periodTimer % TWO_PI;
-
         isPressing = Input.GetKey(KeyCode.Space) || Input.GetMouseButton(0);
 
         if(isMovingFree) {
             if(isPressing) {
-				Debug.Log ("isMovingFree, isPressing, delta = " + lastPlayerMovement + ", frame = " + Time.frameCount);
-                playerPosition += lastPlayerMovement;
+//				Debug.Log ("isMovingFree, isPressing, delta = " + lastPlayerMovement + ", frame = " + Time.frameCount);
+				playerPosition += lastPlayerMovement * (Time.deltaTime / lastDeltaTime);
             } else {
-				Debug.Log ("libero tecla");
+//				Debug.Log ("libero tecla");
                 // Tengo que terminar de moverme libremente y volver a oscilar.
 
                 // EXPLICACION ALGORITMO
@@ -153,13 +151,7 @@ public class Player : MonoBehaviour {
                 float periodPercentage = curvePercentage * TWO_PI;
                 float currentHeightPercentage = Mathf.Sin(periodPercentage);
 
-//                lerping = true;
-//                lerpTimer = 0f;
-
                 setAmplitude(Mathf.Abs(playerPosition.y / currentHeightPercentage));
-//				targetAmplitude = Mathf.Abs(playerPosition.y / currentHeightPercentage);
-//				lerpIncreasesAmplitude = targetAmplitude > amplitude;
-//                lerpSpeed = (targetAmplitude - amplitude) / lerpDuration;
 
 //                Debug.Log("curvePercentage = " + curvePercentage + ", periodPercentage = " + periodPercentage
 //                + ", currentHeightPercentage = " + currentHeightPercentage + ", targetAmplitude = " + targetAmplitude);
@@ -173,35 +165,18 @@ public class Player : MonoBehaviour {
 
         periodTimer += Time.deltaTime;
 
-//		if (lerping) {
-//			float newAmplitude = amplitude + (lerpSpeed * Time.deltaTime);
-//			if (lerpIncreasesAmplitude) {
-//				if (newAmplitude >= targetAmplitude) {
-//					newAmplitude = targetAmplitude;
-//					lerping = false;
-//				}
-//			} else {
-//				if (newAmplitude <= targetAmplitude) {
-//					newAmplitude = targetAmplitude;
-//					lerping = false;
-//				}
-//			}
-//			setAmplitude (newAmplitude);
-//		}
-
         // Esto no puede estar en un else, porque el instante en que dejo de moverme libre tengo que controlar el movimiento aca y no arriba
         if(!isMovingFree) {
 			if(isPressing) {
-				Debug.Log ("aprieto tecla");
-				Debug.Log ("!isMovingFree, isPressing, delta = " + lastPlayerMovement + ", frame = " + Time.frameCount);
+//				Debug.Log ("aprieto tecla");
+//				Debug.Log ("!isMovingFree, isPressing, delta = " + lastPlayerMovement + ", frame = " + Time.frameCount);
                 // comienzo a moverme libre
                 isMovingFree = true;
-                playerPosition += lastPlayerMovement;
+				playerPosition += lastPlayerMovement * (Time.deltaTime / lastDeltaTime);;
             } else {
 				// oscilo
-				lastXSpeed = xSpeed;
                 playerPosition.x += xSpeed * Time.deltaTime;
-				Debug.Log ("!isMovingFree, !isPressing, delta = " + (xSpeed * Time.deltaTime) + ", frame = " + Time.frameCount);
+//				Debug.Log ("!isMovingFree, !isPressing, delta = " + (xSpeed * Time.deltaTime) + ", frame = " + Time.frameCount);
 				
                 float frequencyMultiplier = TWO_PI / periodDuration;
                 float periodTime = periodTimer * frequencyMultiplier;
@@ -221,7 +196,8 @@ public class Player : MonoBehaviour {
         }
 
         lastPlayerMovement = playerPosition - transform.position;
-//		lastPlayerMovement = lastPlayerMovement / 
+		lastDeltaTime = Time.deltaTime;
+//		lastPlayerMovement = lastPlayerMovement /
 
         transform.position = playerPosition;
         spriteRenderer.transform.eulerAngles = spriteRotation;
@@ -239,11 +215,9 @@ public class Player : MonoBehaviour {
 
 
     void setAmplitude(float newAmp) {
-//		if (newAmp <= 
+		if (newAmp <= 0.03f)
+			newAmp = 0.03f;
         amplitude = newAmp;
-
-        // float frequencyMultiplier = TWO_PI / periodDuration;
-        // playerPosition.y = Mathf.Sin(periodTimer * frequencyMultiplier) * amplitude;
 
         xSpeed = getXSpeed(amplitude);
         periodDuration = getPeriodDuration(amplitude);
