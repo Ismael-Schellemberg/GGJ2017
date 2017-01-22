@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class PowerUp : MonoBehaviour {
-    float amplitude = 1f;
+    float amplitude = 2f;
     float periodDuration;
     float periodTimer = 0;
 
@@ -14,8 +14,7 @@ public class PowerUp : MonoBehaviour {
         transform.position = position;
         periodDuration = amplitude * 2f;
     }
-	
-    // Update is called once per frame
+
     void Update() {
         periodTimer += Time.deltaTime;
 
@@ -26,7 +25,7 @@ public class PowerUp : MonoBehaviour {
         float periodCos = Mathf.Cos(periodTime);
 
         position.y = periodSin * amplitude;
-        position.x += player.xSpeed * 0.3f * Time.deltaTime;
+        position.x += player.xSpeed * 0.8f * Time.deltaTime;
 
         transform.position = position;
     }
