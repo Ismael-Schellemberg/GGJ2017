@@ -8,7 +8,6 @@ public class LevelManager : MonoBehaviour {
     [SerializeField] WallContainer[] wallsRare;
     [SerializeField] Player player;
     [SerializeField] float xSpeed;
-    [SerializeField] int minWallsBetweenRares = 5;
 
 	[SerializeField] int minFrequentWalls = 2;
 	[SerializeField] int maxFrequentWalls = 5;

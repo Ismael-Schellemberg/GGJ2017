@@ -21,17 +21,13 @@ public class Player : MonoBehaviour {
     [SerializeField] Color freeColor;
     [SerializeField] float amplitude = 1f;
     // La amplitud de la oscilacion
-    [SerializeField] float periodDuration = 5f;
-    // duracion de la recorrida de un periodo entero (depende de amplitude)
-    public float xSpeed;
-    // Velocidad horizontal (depende de amplitude)
-    [SerializeField] float turnRadius = 0.05f;
-    // Tiene que estar entre 0f y 0.25f (idealmente no en el borde)
-    [SerializeField] float xAcceleration = 0.2f;
-    // Amount accelerated per second
-    [SerializeField] float rotationMax = 35f;
-    // cuanto varia el angulo del sprite jugador. La imagen esta a 35 grados de estar horizontal
+    [SerializeField] float periodDuration = 5f; // duracion de la recorrida de un periodo entero (depende de amplitude)
+    public float xSpeed; // Velocidad horizontal (depende de amplitude)
+    [SerializeField] float turnRadius = 0.05f; // Tiene que estar entre 0f y 0.25f (idealmente no en el borde)
+    [SerializeField] float xAcceleration = 0.08f; // Amount accelerated per second
+    [SerializeField] float rotationMax = 35f; // cuanto varia el angulo del sprite jugador. La imagen esta a 35 grados de estar horizontal
     // Tiempo que demora en pasar de la amplitud actual a la nueva
+	[SerializeField] float maxXSpeed = 4f;
     float targetAmplitude;
     //    float lerpSpeed;
     //    bool lerpIncreasesAmplitude;
@@ -99,7 +95,7 @@ public class Player : MonoBehaviour {
         if(isMovingFree) {
             if(isPressing) {
 //				Debug.Log ("isMovingFree, isPressing, delta = " + lastPlayerMovement + ", frame = " + Time.frameCount);
-                playerPosition += lastPlayerMovement * (Time.deltaTime / lastDeltaTime);
+				moveFree(false);
             } else {
 //				Debug.Log ("libero tecla");
                 // Tengo que terminar de moverme libremente y volver a oscilar.
@@ -172,14 +168,22 @@ public class Player : MonoBehaviour {
 //				Debug.Log ("aprieto tecla");
 //				Debug.Log ("!isMovingFree, isPressing, delta = " + lastPlayerMovement + ", frame = " + Time.frameCount);
                 // comienzo a moverme libre
-                isMovingFree = true;
-                playerPosition += lastPlayerMovement * (Time.deltaTime / lastDeltaTime);
-                ;
+				isMovingFree = true;
+				moveFree (true);
             } else {
                 // oscilo
-                playerPosition.x += xSpeed * Time.deltaTime;
+				float modifier = 1f;
+				if (amplitude < 1f) {
+					modifier = 2f - amplitude;
+				}
+                playerPosition.x += xSpeed * Time.deltaTime * modifier;
 //				Debug.Log ("!isMovingFree, !isPressing, delta = " + (xSpeed * Time.deltaTime) + ", frame = " + Time.frameCount);
-				
+
+				// periodTime = 0      ... cos = 1  ... rotation = -35 + rotationMax
+				// periodTime = PI/2   ... cos = 0  ... rotation = -35
+				// periodTime = PI     ... cos = -1 ... rotation = -35 - rotationMax
+				// periodTime = PI*3/2 ... cos = 0  ... rotation = -35
+
                 float frequencyMultiplier = TWO_PI / periodDuration;
                 float periodTime = periodTimer * frequencyMultiplier;
 
@@ -190,10 +194,6 @@ public class Player : MonoBehaviour {
 
                 spriteRotation.z = -35 + (periodCos * rotationMax);
 
-                // periodTime = 0      ... cos = 1  ... rotation = -35 + rotationMax
-                // periodTime = PI/2   ... cos = 0  ... rotation = -35
-                // periodTime = PI     ... cos = -1 ... rotation = -35 - rotationMax
-                // periodTime = PI*3/2 ... cos = 0  ... rotation = -35
             }
         }
 
@@ -208,7 +208,18 @@ public class Player : MonoBehaviour {
         cameraObj.transform.position = cameraPosition;
 
         xSpeed += xAcceleration * Time.deltaTime;
+		if (xSpeed >= maxXSpeed)
+			xSpeed = maxXSpeed;
     }
+
+	void moveFree(bool useModifier) {
+		playerPosition.y += lastPlayerMovement.y * (Time.deltaTime / lastDeltaTime);
+		float modifier = 1f;
+		if (useModifier && amplitude < 1f) {
+			modifier = 2f - amplitude;
+		}
+		playerPosition.x += xSpeed * Time.deltaTime * modifier;
+	}
 
     void UpdateTrailColor() {
         if(isMovingFree)
@@ -219,8 +230,8 @@ public class Player : MonoBehaviour {
 
 
     void setAmplitude(float newAmp) {
-        if(newAmp <= 0.03f)
-            newAmp = 0.03f;
+        if(newAmp <= 0.2f)
+            newAmp = 0.2f;
         amplitude = newAmp;
 
 //        xSpeed = getXSpeed(amplitude);
