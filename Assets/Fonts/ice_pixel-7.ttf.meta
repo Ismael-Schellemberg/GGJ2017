@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: 38e384bb935b84cb0adc37b0646649f8
+timeCreated: 1485057073
+licenseType: Pro
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Ice Pixel7
+  fontNames:
+  - Ice Pixel7
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

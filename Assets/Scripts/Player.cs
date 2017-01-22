@@ -4,7 +4,9 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class Player : MonoBehaviour {
-    public Text score;
+    public Text scoreText;
+    public Text highscoreText;
+    int highscore;
     int points;
     public LevelManager manager;
     [SerializeField] Animator anim;
@@ -245,7 +247,7 @@ public class Player : MonoBehaviour {
             return;
 
         if(coll.gameObject.tag == "Wall" || coll.gameObject.tag == "Obstacle") {
-            cameraEffects.ShakeCamera(5f, 0.01f);
+            cameraEffects.ShakeCamera(20f, 0.02f);
             playing = false;
             trailRend.enabled = false;
             anim.SetTrigger("die");  
@@ -265,8 +267,11 @@ public class Player : MonoBehaviour {
     }
 
     void SaveScore() {
-        if(PlayerPrefs.GetInt("highscore", 0) < points) {
-            PlayerPrefs.SetInt("highscore", points);
+        UpdateScore();
+        if(highscore < points) {
+            highscore = points;
+            UpdateHighScore();
+            PlayerPrefs.SetInt("highscore", highscore);
             PlayerPrefs.Save();
         }
     }
@@ -286,6 +291,9 @@ public class Player : MonoBehaviour {
         UpdateTrailColor();
 
         manager.Reset();
+
+        highscore = PlayerPrefs.GetInt("highscore", 0);
+        UpdateHighScore();
     }
 
     void OnTriggerEnter2D(Collider2D col) {
@@ -294,12 +302,16 @@ public class Player : MonoBehaviour {
 
         if(col.tag == "Coin") {
             points++;
-            UpdateScore();
+            SaveScore();
             col.GetComponent<Coin>().Hit();
         }
     }
 
     void UpdateScore() {
-        score.text = points.ToString();
+        scoreText.text = points.ToString();
+    }
+
+    void UpdateHighScore() {
+        highscoreText.text = highscore.ToString();
     }
 }

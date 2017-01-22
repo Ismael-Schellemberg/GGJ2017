@@ -28,10 +28,9 @@ public class CameraEffects : MonoBehaviour {
     //Amount to smooth
 
     public void ShakeCamera(float amount = 20f, float duration = 1f) {
- 
-        shakeAmount += amount;//Add to the current amount.
+        shakeAmount = amount;//Add to the current amount.
         startAmount = shakeAmount;//Reset the start amount, to determine percentage.
-        shakeDuration += duration;//Add to the current time.
+        shakeDuration = duration;//Add to the current time.
         startDuration = shakeDuration;//Reset the start time.
  
         if(!isRunning)
