@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class Paralax : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    [SerializeField] Player player;
+    [SerializeField] float maxX;
+    [SerializeField] float factor;
+    [SerializeField] Vector3 position;
+
+    void Update() {
+        position.x -= player.xSpeed * factor * Time.deltaTime;
+        transform.position = position;
+    }
 }

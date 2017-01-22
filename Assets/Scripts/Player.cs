@@ -23,7 +23,7 @@ public class Player : MonoBehaviour {
     // La amplitud de la oscilacion
     [SerializeField] float periodDuration = 5f;
     // duracion de la recorrida de un periodo entero (depende de amplitude)
-    [SerializeField] float xSpeed = 2f;
+    public float xSpeed { get; private set; }
     // Velocidad horizontal (depende de amplitude)
     [SerializeField] float turnRadius = 0.05f;
     // Tiene que estar entre 0f y 0.25f (idealmente no en el borde)
@@ -250,6 +250,7 @@ public class Player : MonoBehaviour {
 
     void Reset() {
         UpdateScore();
+        xSpeed = 2f;
         points = 0;
         playerPosition = new Vector3(-4f, 0f, 0f);
 		setAmplitude (1f);
