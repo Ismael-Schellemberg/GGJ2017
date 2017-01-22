@@ -4,14 +4,19 @@ using UnityEngine;
 
 public class LevelManager : MonoBehaviour {
 
+    [SerializeField] PowerUp powerupPrefab;
+    [SerializeField] float powerUpCooldown = 15;
+    float powerUpTimer;
+    List<GameObject> visiblePowerUps = new List<GameObject>();
+
     [SerializeField] WallContainer[] wallsFrequent;
     [SerializeField] WallContainer[] wallsRare;
     [SerializeField] Player player;
     [SerializeField] float xSpeed;
 
-	[SerializeField] int minFrequentWalls = 2;
-	[SerializeField] int maxFrequentWalls = 5;
-	int nextFrequentWallAmount;
+    [SerializeField] int minFrequentWalls = 2;
+    [SerializeField] int maxFrequentWalls = 5;
+    int nextFrequentWallAmount;
 
     private float visibleHeight;
     private float visibleWidth;
@@ -21,16 +26,12 @@ public class LevelManager : MonoBehaviour {
     private WallContainer firstWall;
 
     private int wallsSinceLastRare = 0;
-	private int normalWallsCounter = 0;
+    private int normalWallsCounter = 0;
 
 
     private List<WallContainer> visibleWalls = new List<WallContainer>();
 
     private bool initialized = false;
-
-    //    void Start() {
-    //		init ();
-    //    }
 
     void init() {
         if(!initialized) {
@@ -81,7 +82,7 @@ public class LevelManager : MonoBehaviour {
     private WallContainer getNextWallContainer() {
         WallContainer container = null;
 
-		bool useRareWall = normalWallsCounter > 5 && wallsSinceLastRare >= nextFrequentWallAmount; // wallsSinceLastRare > minWallsBetweenRares ? Random.value < 0.2f : false;
+        bool useRareWall = normalWallsCounter > 5 && wallsSinceLastRare >= nextFrequentWallAmount; // wallsSinceLastRare > minWallsBetweenRares ? Random.value < 0.2f : false;
         
         int maxIndex = useRareWall ? wallsRare.Length : wallsFrequent.Length;
         int index = Random.Range(0, maxIndex);
@@ -89,9 +90,9 @@ public class LevelManager : MonoBehaviour {
         if(useRareWall) {
             wallId += wallsFrequent.Length;
             wallsSinceLastRare = 0;
-			nextFrequentWallAmount = Random.Range (minFrequentWalls, maxFrequentWalls + 1);
+            nextFrequentWallAmount = Random.Range(minFrequentWalls, maxFrequentWalls + 1);
         } else {
-			normalWallsCounter++;
+            normalWallsCounter++;
             wallsSinceLastRare++;
         }
 				
@@ -107,7 +108,8 @@ public class LevelManager : MonoBehaviour {
 
     public void Reset() {
         init();
-		normalWallsCounter = 0;
+        powerUpTimer = 0;
+        normalWallsCounter = 0;
         WallContainer[] toDelete = visibleWalls.ToArray();
         visibleWalls.Clear();
         for(int i = 0; i < toDelete.Length; i++) {
@@ -119,6 +121,12 @@ public class LevelManager : MonoBehaviour {
             addRandomWall();
         }
         firstWall = visibleWalls[0];
+
+        GameObject[] powerupsToDelete = visiblePowerUps.ToArray();
+        visiblePowerUps.Clear();
+        for(int i = 0; i < powerupsToDelete.Length; i++) {
+            Destroy(powerupsToDelete[i].gameObject);
+        }
     }
 
     void Update() {
@@ -126,6 +134,14 @@ public class LevelManager : MonoBehaviour {
             addRandomWall();
         }
         checkCacheFirstWall();
+
+        powerUpTimer += Time.deltaTime;
+        if(powerUpTimer > powerUpCooldown) {
+            powerUpTimer = 0;
+            GameObject powerupGO = Instantiate(powerupPrefab.gameObject, transform) as GameObject;
+            powerupGO.GetComponent<PowerUp>().player = player;
+            visiblePowerUps.Add(powerupGO);
+        }
     }
 
     private void checkCacheFirstWall() {

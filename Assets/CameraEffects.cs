@@ -61,4 +61,17 @@ public class CameraEffects : MonoBehaviour {
         transform.localRotation = Quaternion.identity;//Set the local rotation to 0 when done, just to get rid of any fudging stuff.
         isRunning = false;
     }
+
+    public float minBloomIntensity = 1.66f;
+    float bloomIntensity = 1.66f;
+
+    void Update() {
+        bloom.intensity = Mathf.Lerp(bloom.intensity, bloomIntensity, Time.deltaTime);
+        if(bloomIntensity > minBloomIntensity)
+            bloomIntensity -= 0.01f;
+    }
+
+    public void BoostBloom() {
+        bloomIntensity *= 1.5f;
+    }
 }

@@ -23,13 +23,18 @@ public class Player : MonoBehaviour {
     [SerializeField] Color freeColor;
     [SerializeField] float amplitude = 1f;
     // La amplitud de la oscilacion
-    [SerializeField] float periodDuration = 5f; // duracion de la recorrida de un periodo entero (depende de amplitude)
-    public float xSpeed; // Velocidad horizontal (depende de amplitude)
-    [SerializeField] float turnRadius = 0.05f; // Tiene que estar entre 0f y 0.25f (idealmente no en el borde)
-    [SerializeField] float xAcceleration = 0.08f; // Amount accelerated per second
-    [SerializeField] float rotationMax = 35f; // cuanto varia el angulo del sprite jugador. La imagen esta a 35 grados de estar horizontal
+    [SerializeField] float periodDuration = 5f;
+    // duracion de la recorrida de un periodo entero (depende de amplitude)
+    public float xSpeed;
+    // Velocidad horizontal (depende de amplitude)
+    [SerializeField] float turnRadius = 0.05f;
+    // Tiene que estar entre 0f y 0.25f (idealmente no en el borde)
+    [SerializeField] float xAcceleration = 0.08f;
+    // Amount accelerated per second
+    [SerializeField] float rotationMax = 35f;
+    // cuanto varia el angulo del sprite jugador. La imagen esta a 35 grados de estar horizontal
     // Tiempo que demora en pasar de la amplitud actual a la nueva
-	[SerializeField] float maxXSpeed = 4f;
+    [SerializeField] float maxXSpeed = 4f;
     float targetAmplitude;
     //    float lerpSpeed;
     //    bool lerpIncreasesAmplitude;
@@ -93,11 +98,15 @@ public class Player : MonoBehaviour {
             return;
 
         isPressing = Input.GetKey(KeyCode.Space) || Input.GetMouseButton(0);
+        if(isPressing)
+            spriteRenderer.color = fixedColor;
+        else
+            spriteRenderer.color = freeColor;
 
         if(isMovingFree) {
             if(isPressing) {
 //				Debug.Log ("isMovingFree, isPressing, delta = " + lastPlayerMovement + ", frame = " + Time.frameCount);
-				moveFree(false);
+                moveFree(false);
             } else {
 //				Debug.Log ("libero tecla");
                 // Tengo que terminar de moverme libremente y volver a oscilar.
@@ -170,21 +179,21 @@ public class Player : MonoBehaviour {
 //				Debug.Log ("aprieto tecla");
 //				Debug.Log ("!isMovingFree, isPressing, delta = " + lastPlayerMovement + ", frame = " + Time.frameCount);
                 // comienzo a moverme libre
-				isMovingFree = true;
-				moveFree (true);
+                isMovingFree = true;
+                moveFree(true);
             } else {
                 // oscilo
-				float modifier = 1f;
-				if (amplitude < 1f) {
-					modifier = 2f - amplitude;
-				}
+                float modifier = 1f;
+                if(amplitude < 1f) {
+                    modifier = 2f - amplitude;
+                }
                 playerPosition.x += xSpeed * Time.deltaTime * modifier;
 //				Debug.Log ("!isMovingFree, !isPressing, delta = " + (xSpeed * Time.deltaTime) + ", frame = " + Time.frameCount);
 
-				// periodTime = 0      ... cos = 1  ... rotation = -35 + rotationMax
-				// periodTime = PI/2   ... cos = 0  ... rotation = -35
-				// periodTime = PI     ... cos = -1 ... rotation = -35 - rotationMax
-				// periodTime = PI*3/2 ... cos = 0  ... rotation = -35
+                // periodTime = 0      ... cos = 1  ... rotation = -35 + rotationMax
+                // periodTime = PI/2   ... cos = 0  ... rotation = -35
+                // periodTime = PI     ... cos = -1 ... rotation = -35 - rotationMax
+                // periodTime = PI*3/2 ... cos = 0  ... rotation = -35
 
                 float frequencyMultiplier = TWO_PI / periodDuration;
                 float periodTime = periodTimer * frequencyMultiplier;
@@ -210,18 +219,18 @@ public class Player : MonoBehaviour {
         cameraObj.transform.position = cameraPosition;
 
         xSpeed += xAcceleration * Time.deltaTime;
-		if (xSpeed >= maxXSpeed)
-			xSpeed = maxXSpeed;
+        if(xSpeed >= maxXSpeed)
+            xSpeed = maxXSpeed;
     }
 
-	void moveFree(bool useModifier) {
-		playerPosition.y += lastPlayerMovement.y * (Time.deltaTime / lastDeltaTime);
-		float modifier = 1f;
-		if (useModifier && amplitude < 1f) {
-			modifier = 2f - amplitude;
-		}
-		playerPosition.x += xSpeed * Time.deltaTime * modifier;
-	}
+    void moveFree(bool useModifier) {
+        playerPosition.y += lastPlayerMovement.y * (Time.deltaTime / lastDeltaTime);
+        float modifier = 1f;
+        if(useModifier && amplitude < 1f) {
+            modifier = 2f - amplitude;
+        }
+        playerPosition.x += xSpeed * Time.deltaTime * modifier;
+    }
 
     void UpdateTrailColor() {
         if(isMovingFree)
@@ -248,6 +257,7 @@ public class Player : MonoBehaviour {
 
         if(coll.gameObject.tag == "Wall" || coll.gameObject.tag == "Obstacle") {
             cameraEffects.ShakeCamera(20f, 0.02f);
+            spriteRenderer.color = freeColor;
             playing = false;
             trailRend.enabled = false;
             anim.SetTrigger("die");  
@@ -299,11 +309,15 @@ public class Player : MonoBehaviour {
     void OnTriggerEnter2D(Collider2D col) {
         if(!playing)
             return;
-
+        
         if(col.tag == "Coin") {
             points++;
             SaveScore();
             col.GetComponent<Coin>().Hit();
+        } else if(col.tag == "SpeedPowerup") {
+            col.GetComponent<PowerUp>().Hit();
+        } else if(col.tag == "MagnetPowerup") {
+            col.GetComponent<PowerUp>().Hit();
         }
     }
 
