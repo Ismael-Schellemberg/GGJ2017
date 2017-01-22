@@ -43,13 +43,14 @@ public class PowerUp : MonoBehaviour {
     }
 
     public void Hit() {
-        if(!colider.enabled)
+        if(!moving)
             return;
-
+        moving = false;
         colider.enabled = false;
         anim.SetTrigger("hit");
+        OnHit();
     }
 
-    protected void OnHit() {
+    protected virtual void OnHit() {
     }
 }

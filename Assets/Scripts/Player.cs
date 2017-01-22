@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class Player : MonoBehaviour {
+
     public Text scoreText;
     public Text highscoreText;
     int highscore;
@@ -328,4 +329,5 @@ public class Player : MonoBehaviour {
     void UpdateHighScore() {
         highscoreText.text = highscore.ToString();
     }
+
 }
